@@ -3,55 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sabor Express - Tu Comida Rápida Favorita</title>
+    <title>Sabor Auténtico - Restaurante Gourmet</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons (e.g., cart icon) -->
+    <!-- Google Fonts - Poppins for a modern, elegant look -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #fefce8; /* Tailwind: bg-yellow-50 */
-            color: #334155; /* Tailwind: text-slate-700 */
+            font-family: 'Poppins', sans-serif;
+            background-color: #fdfcfc; /* Very light grey/off-white */
+            color: #334155; /* Slate-700 */
         }
         .container {
             max-width: 1200px;
         }
-        .menu-item-card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            opacity: 0; /* Initial state for fade-in animation */
-            transform: translateY(20px); /* Initial state for slide-up animation */
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        /* General section animation */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
         }
-        .menu-item-card.fade-in {
+        .animate-on-scroll.is-visible {
             opacity: 1;
             transform: translateY(0);
         }
-        .menu-item-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 25px -5px rgba(0, 0, 0, 0.2), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Stronger shadow */
-        }
+
         /* Hero text animation */
-        .animate-hero-text {
-            animation: fadeInScale 1s ease-out forwards;
+        .hero-text-animate {
+            animation: fadeInSlideUp 1.2s ease-out forwards;
         }
-        @keyframes fadeInScale {
+        .hero-text-animate.delay-1 { animation-delay: 0.3s; }
+        .hero-text-animate.delay-2 { animation-delay: 0.6s; }
+        .hero-text-animate.delay-3 { animation-delay: 0.9s; }
+        @keyframes fadeInSlideUp {
             from {
                 opacity: 0;
-                transform: scale(0.9) translateY(20px);
+                transform: translateY(30px);
             }
             to {
                 opacity: 1;
-                transform: scale(1) translateY(0);
+                transform: translateY(0);
             }
         }
-        .animate-delay-300 { animation-delay: 0.3s; }
-        .animate-delay-600 { animation-delay: 0.6s; }
 
-        /* Shopping Cart Styles */
-        #cartModal {
+        /* Menu item hover effect */
+        .menu-item-card {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .menu-item-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -8px rgba(0, 0, 0, 0.25), 0 10px 12px -7px rgba(0, 0, 0, 0.1);
+        }
+        .menu-item-card img {
+            transition: transform 0.4s ease-in-out;
+        }
+        .menu-item-card:hover img {
+            transform: scale(1.03);
+        }
+
+        /* Back to Top button */
+        #backToTopBtn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 30px;
+            z-index: 99;
+            border: none;
+            outline: none;
+            background-color: #ef4444; /* Red-500 */
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 18px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        #backToTopBtn:hover {
+            background-color: #dc2626; /* Red-600 */
+            transform: translateY(-2px);
+        }
+
+        /* Modal styles (Shopping Cart) */
+        .modal {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
             z-index: 100; /* Sit on top */
@@ -60,31 +96,27 @@
             width: 100%; /* Full width */
             height: 100%; /* Full height */
             overflow: auto; /* Enable scroll if needed */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-            backdrop-filter: blur(5px); /* Blur background */
+            background-color: rgba(0,0,0,0.6); /* Black w/ more opacity */
+            backdrop-filter: blur(8px); /* Stronger blur */
+            align-items: center; /* Used with flex to center content */
+            justify-content: center; /* Used with flex to center content */
         }
-        .cart-content {
-            background-color: #fefce8; /* bg-yellow-50 */
-            margin: 5% auto; /* 5% from the top and centered */
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
             padding: 2.5rem;
             border-radius: 1rem;
-            width: 90%; /* Could be more responsive */
-            max-width: 600px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
             position: relative;
-            animation: slideInFromTop 0.5s ease-out;
+            animation: modalFadeIn 0.4s ease-out;
         }
-        @keyframes slideInFromTop {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
-        .close-button {
+        .close-modal-btn {
             color: #aaa;
             float: right;
             font-size: 2.5rem;
@@ -92,8 +124,8 @@
             cursor: pointer;
             transition: color 0.3s;
         }
-        .close-button:hover,
-        .close-button:focus {
+        .close-modal-btn:hover,
+        .close-modal-btn:focus {
             color: #ef4444; /* Red-500 */
             text-decoration: none;
             cursor: pointer;
@@ -103,7 +135,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 0.75rem 0;
-            border-bottom: 1px dashed #e5e7eb; /* Slate-200 */
+            border-bottom: 1px dashed #e5e7eb;
         }
         .cart-item-row:last-child {
             border-bottom: none;
@@ -129,184 +161,352 @@
             background-color: #dc2626; /* Red-600 */
         }
 
-        /* Back to Top button */
-        #backToTopBtn {
-            display: none; /* Hidden by default */
-            position: fixed; /* Fixed position */
-            bottom: 20px; /* Place at the bottom */
-            right: 30px; /* Place at the right */
-            z-index: 99; /* Make sure it does not overlap */
-            border: none; /* Remove borders */
-            outline: none; /* Remove outline */
-            background-color: #f97316; /* Orange-500 */
-            color: white; /* Text color */
-            cursor: pointer; /* Add a mouse pointer on hover */
-            padding: 15px; /* Some padding */
-            border-radius: 50%; /* Rounded corners */
-            font-size: 18px; /* Increase font size */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s, transform 0.3s;
+        /* Drawer Menu Styles */
+        .drawer-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 80%; /* Adjust as needed, e.g., 80% of screen width */
+            max-width: 300px; /* Max width for larger mobiles/small tablets */
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.2); /* Transparent white */
+            backdrop-filter: blur(10px); /* Blurred background */
+            -webkit-backdrop-filter: blur(10px); /* For Safari */
+            transform: translateX(100%); /* Start off-screen to the right */
+            transition: transform 0.4s ease-out;
+            z-index: 90; /* Below cart modal, above main content */
+            padding: 2rem;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
-        #backToTopBtn:hover {
-            background-color: #ea580c; /* Orange-600 */
-            transform: translateY(-2px);
+        .drawer-menu.open {
+            transform: translateX(0); /* Slide in */
+        }
+        .drawer-close-btn {
+            align-self: flex-end; /* Push to top right of drawer */
+            font-size: 2.5rem;
+            color: #ef4444; /* Red-500 */
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            transition: color 0.3s;
+        }
+        .drawer-close-btn:hover {
+            color: #dc2626; /* Red-600 */
+        }
+        .drawer-nav-links a {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 0;
+            color: #334155; /* Slate-700 */
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: left;
+            transition: color 0.3s, background-color 0.3s;
+            border-radius: 0.5rem;
+        }
+        .drawer-nav-links a:hover {
+            color: #ef4444; /* Red-500 */
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Hamburger Icon */
+        .hamburger-icon {
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            display: block; /* Show by default on small screens */
+        }
+
+        /* Hide regular nav links and show hamburger on small screens */
+        @media (max-width: 767px) { /* Tailwind's 'md' breakpoint is 768px */
+            .header-nav-links {
+                display: none;
+            }
+            .hamburger-icon {
+                display: block;
+            }
+        }
+
+        /* Hide hamburger and show regular nav links on medium and larger screens */
+        @media (min-width: 768px) {
+            .header-nav-links {
+                display: flex !important; /* Override flex-col from above */
+                flex-direction: row !important;
+                space-x: 1.5rem; /* Tailwind's space-x-6 */
+            }
+            .hamburger-icon {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
 
     <!-- Header / Navbar -->
-    <header class="bg-red-600 shadow-lg py-4 sticky top-0 z-50">
+    <header class="bg-red-700 shadow-xl py-4 sticky top-0 z-50">
         <nav class="container mx-auto flex justify-between items-center px-4">
-            <a href="#" class="text-3xl font-extrabold text-white rounded-lg p-2 hover:bg-red-700 transition duration-300">
-                Sabor Express
+            <a href="#" class="text-3xl font-extrabold text-white rounded-lg p-2 hover:bg-red-800 transition duration-300">
+                Sabor Auténtico
             </a>
-            <ul class="flex space-x-6 items-center">
-                <li><a href="#menu" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-700">Menú</a></li>
-                <li><a href="#contacto" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-700">Contacto</a></li>
+            
+            <!-- Hamburger Icon for Mobile -->
+            <button id="hamburgerBtn" class="hamburger-icon md:hidden">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Regular Navigation Links (Hidden on Mobile, shown on MD+) -->
+            <ul class="header-nav-links hidden md:flex md:space-x-6 items-center">
+                <li><a href="#inicio" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Inicio</a></li>
+                <li><a href="#menu" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Menú</a></li>
+                <li><a href="#reservaciones" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Reservaciones</a></li>
+                <li><a href="#domicilio" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">A Domicilio</a></li>
+                <li><a href="#contacto" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Contacto</a></li>
                 <li>
                     <button id="openCartBtn" class="bg-yellow-400 text-red-800 font-bold py-2 px-4 rounded-full hover:bg-yellow-500 transition duration-300 flex items-center shadow-md">
                         <i class="fas fa-shopping-cart mr-2"></i> Carrito (<span id="cartItemCount">0</span>)
                     </button>
                 </li>
             </ul>
+            <!-- Cart button for mobile (always visible) -->
+            <button id="openCartBtnMobile" class="bg-yellow-400 text-red-800 font-bold py-2 px-4 rounded-full hover:bg-yellow-500 transition duration-300 flex items-center shadow-md md:hidden">
+                <i class="fas fa-shopping-cart mr-2"></i> (<span id="cartItemCountMobile">0</span>)
+            </button>
         </nav>
     </header>
 
+    <!-- Mobile Drawer Menu -->
+    <div id="mobileDrawer" class="drawer-menu">
+        <button id="drawerCloseBtn" class="drawer-close-btn">&times;</button>
+        <div class="drawer-nav-links w-full">
+            <a href="#menu" class="hover:bg-red-100">Menú</a>
+            <a href="#contacto" class="hover:bg-red-100">Contacto</a>
+            <!-- You can add more links here if needed, but per request, only Menu and Contact -->
+        </div>
+    </div>
+
+
     <!-- Hero Section -->
-    <section id="inicio" class="bg-cover bg-center h-[500px] flex items-center justify-center text-white relative" 
-style="background-image: url('https://media.traveler.es/photos/61c5d52fffc04ac0ad2208f4/16:9/w_2560%2Cc_limit/2AB9DD5.jpg'); background-size: cover; background-position: center;">
-    <div class="absolute inset-0 bg-black opacity-50"></div>
-    <div class="container mx-auto text-center z-10">
-        <h1 class="text-6xl font-extrabold mb-4 leading-tight animate-hero-text">
-            ¡Tu Antojo, Entregado Rápido!</h1>
-            <p class="text-2xl mb-8 max-w-3xl mx-auto opacity-90 animate-hero-text animate-delay-300">
-                Las hamburguesas más jugosas, las papas más crujientes y los sabores más explosivos te esperan.
+    <section id="inicio" class="bg-cover bg-center h-[600px] flex items-center justify-center text-white relative" style="background-image: url('https://images.unsplash.com/photo-1555939594-58d7ce5614f0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');">
+        <div class="absolute inset-0 bg-black opacity-60"></div>
+        <div class="container mx-auto text-center z-10 p-4">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-4 leading-tight hero-text-animate">Sabor que Inspira, Experiencia que Deleita</h1>
+            <p class="text-lg md:text-2xl mb-8 max-w-3xl mx-auto opacity-90 hero-text-animate delay-1">
+                Descubre la auténtica cocina con ingredientes frescos y pasión en cada plato.
             </p>
-            <a href="#menu" class="bg-yellow-400 text-red-800 hover:bg-yellow-500 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block animate-hero-text animate-delay-600">
-                Ver Nuestro Menú
-            </a>
+            <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="#reservaciones" class="bg-yellow-400 text-red-800 hover:bg-yellow-500 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block hero-text-animate delay-2">
+                    Haz tu Reserva Ahora
+                </a>
+                <a href="#menu" class="bg-red-600 text-white hover:bg-red-700 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block hero-text-animate delay-3">
+                    Explora Nuestro Menú
+                </a>
+            </div>
         </div>
     </section>
 
-    <!-- Menu / Catalog Section -->
-    <section id="menu" class="py-16 px-4 bg-yellow-50">
+    <!-- Menu Section -->
+    <section id="menu" class="py-16 px-4 bg-yellow-50 animate-on-scroll">
         <div class="container mx-auto">
-            <h2 class="text-5xl font-extrabold text-center text-red-700 mb-12">Nuestro Delicioso Menú</h2>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-center text-red-700 mb-12">Nuestro Exquisito Menú</h2>
+
+            <!-- Categorías de Menú -->
+            <div class="flex flex-wrap justify-center space-x-2 md:space-x-4 mb-10">
+                <button class="menu-category-btn bg-red-500 text-white py-2 px-4 md:px-6 rounded-full hover:bg-red-600 transition duration-300 shadow-md mb-2" data-category="all">Todos</button>
+                <button class="menu-category-btn bg-red-500 text-white py-2 px-4 md:px-6 rounded-full hover:bg-red-600 transition duration-300 shadow-md mb-2" data-category="entradas">Entradas</button>
+                <button class="menu-category-btn bg-red-500 text-white py-2 px-4 md:px-6 rounded-full hover:bg-red-600 transition duration-300 shadow-md mb-2" data-category="principales">Platos Principales</button>
+                <button class="menu-category-btn bg-red-500 text-white py-2 px-4 md:px-6 rounded-full hover:bg-red-600 transition duration-300 shadow-md mb-2" data-category="postres">Postres</button>
+                <button class="menu-category-btn bg-red-500 text-white py-2 px-4 md:px-6 rounded-full hover:bg-red-600 transition duration-300 shadow-md mb-2" data-category="bebidas">Bebidas</button>
+            </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Menu Item 1: Hamburguesa Clásica -->
-                <div class="menu-item-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://resizer.glanacion.com/resizer/v2/hamburguesa-FHBQ5XJM55H2PFSAFSC6HHESVQ.jpg?auth=c14fd6c0f7fd21e554cb59b5d69f7ee3551b78c00f500eb190a79ae39dc0ae80&width=420&height=280&quality=70&smart=true" alt="Hamburguesa Clásica" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ffcc00/000000?text=Hamburguesa';">
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Hamburguesa Clásica</h3>
+                <!-- Plato 1: Salmón a la Parrilla -->
+                <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="principales">
+                    <img src="https://images.unsplash.com/photo-1519708227418-f7dcab993d66?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Salmón a la Parrilla" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Salmón';">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Salmón a la Parrilla</h3>
                     <p class="text-slate-600 mb-4 flex-grow">
-                        Carne 100% res, lechuga, tomate, cebolla, pepinillos y nuestra salsa especial.
+                        Filete de salmón fresco con hierbas aromáticas, acompañado de espárragos y patatas asadas.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$8.99</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Hamburguesa Clásica" data-price="8.99">
-                        <i class="fas fa-cart-plus mr-2"></i> Añadir al Carrito
+                    <p class="text-3xl font-extrabold text-green-600 mb-4">$22.50</p>
+                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Salmón a la Parrilla" data-price="22.50">
+                        <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
                 </div>
 
-                <!-- Menu Item 2: Pizza Pepperoni -->
-                <div class="menu-item-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2f38jmDq8OZhG72KpH345LC9teABsdTXrqg&s" alt="Pizza Pepperoni" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ffcc00/000000?text=Pizza';">
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Pizza Pepperoni</h3>
+                <!-- Plato 2: Pasta Carbonara -->
+                <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="principales">
+                    <img src="https://images.unsplash.com/photo-1588013277068-f967d3c3165d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Pasta Carbonara" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Carbonara';">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Pasta Carbonara</h3>
                     <p class="text-slate-600 mb-4 flex-grow">
-                        La clásica pizza con abundante queso mozzarella y rodajas de pepperoni.
+                        Clásica pasta italiana con huevo, queso pecorino, guanciale y pimienta negra.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$12.50</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Pizza Pepperoni" data-price="12.50">
-                        <i class="fas fa-cart-plus mr-2"></i> Añadir al Carrito
+                    <p class="text-3xl font-extrabold text-green-600 mb-4">$18.00</p>
+                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Pasta Carbonara" data-price="18.00">
+                        <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
                 </div>
 
-                <!-- Menu Item 3: Papas Fritas Grandes -->
-                <div class="menu-item-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://resizer.glanacion.com/resizer/v2/papas-fritas-estilo-french-fries-con-V3HQTRWMCRF3HBDBKQJUYFTAL4.jpg?auth=b1859780e4d3e7869de3df2412ebe454c37bedebf1576b58e779c992c8b1c63c&width=1280&height=854&quality=70&smart=true" alt="Papas Fritas Grandes" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ffcc00/000000?text=Papas';">
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Papas Fritas Grandes</h3>
+                <!-- Plato 3: Ensalada Caprese -->
+                <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="entradas">
+                    <img src="https://images.unsplash.com/photo-1505576288649-f4728551475d?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Ensalada Caprese" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Caprese';">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Ensalada Caprese</h3>
                     <p class="text-slate-600 mb-4 flex-grow">
-                        Crujientes por fuera, suaves por dentro. ¡Perfectas para acompañar!
+                        Tomates frescos, mozzarella de búfala, albahaca y un toque de aceite de oliva virgen extra.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$3.50</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Papas Fritas Grandes" data-price="3.50">
-                        <i class="fas fa-cart-plus mr-2"></i> Añadir al Carrito
+                    <p class="text-3xl font-extrabold text-green-600 mb-4">$10.00</p>
+                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Ensalada Caprese" data-price="10.00">
+                        <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
                 </div>
 
-                <!-- Menu Item 4: Nuggets de Pollo -->
-                <div class="menu-item-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQU-2A8f1xvKGjm9odz5E2y3q91qAvTAFMz9g&s" alt="Nuggets de Pollo" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ffcc00/000000?text=Nuggets';">
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Nuggets de Pollo (6 und)</h3>
+                <!-- Plato 4: Tiramisú -->
+                <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="postres">
+                    <img src="https://images.unsplash.com/photo-1543731110-394334399719?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Tiramisú" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Tiramisú';">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Tiramisú</h3>
                     <p class="text-slate-600 mb-4 flex-grow">
-                        Tiernos trozos de pollo empanizados, dorados a la perfección.
+                        El clásico postre italiano con capas de bizcocho, café, mascarpone y cacao.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$6.00</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Nuggets de Pollo (6 und)" data-price="6.00">
-                        <i class="fas fa-cart-plus mr-2"></i> Añadir al Carrito
+                    <p class="text-3xl font-extrabold text-green-600 mb-4">$8.50</p>
+                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Tiramisú" data-price="8.50">
+                        <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
                 </div>
 
-                <!-- Menu Item 5: Refresco Grande -->
-                <div class="menu-item-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://api-middleware-mcd.mcdonaldscupones.com/media/image/product$CCO%20GDE%20300X225.png/200/200/original?country=mx" alt="Refresco Grande" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ffcc00/000000?text=Refresco';">
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Refresco Grande</h3>
+                <!-- Plato 5: Vino Tinto (Bebida) -->
+                <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="bebidas">
+                    <img src="https://images.unsplash.com/photo-1582297926189-98305364132b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Vino Tinto" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Vino';">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Vino Tinto (Copa)</h3>
                     <p class="text-slate-600 mb-4 flex-grow">
-                        Elige tu bebida favorita para acompañar tu comida.
+                        Selección de nuestro vino de la casa, perfecto para maridar.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$2.50</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Refresco Grande" data-price="2.50">
-                        <i class="fas fa-cart-plus mr-2"></i> Añadir al Carrito
+                    <p class="text-3xl font-extrabold text-green-600 mb-4">$9.00</p>
+                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Vino Tinto (Copa)" data-price="9.00">
+                        <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
                 </div>
 
-                <!-- Menu Item 6: Ensalada Fresca (Opción Saludable) -->
-                <div class="menu-item-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://d36fw6y2wq3bat.cloudfront.net/recipes/ensalada-fresca-variada/900/ensalada-fresca-variada_version_1651291576.jpg" alt="Ensalada Fresca" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ffcc00/000000?text=Ensalada';">
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Ensalada Fresca</h3>
+                <!-- Plato 6: Sopa de Tomate y Albahaca -->
+                <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="entradas">
+                    <img src="https://images.unsplash.com/photo-1547592180-85f173990554?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sopa de Tomate y Albahaca" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Sopa';">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Sopa de Tomate y Albahaca</h3>
                     <p class="text-slate-600 mb-4 flex-grow">
-                        Una opción ligera y saludable con vegetales frescos y aderezo.
+                        Una sopa reconfortante, cremosa y llena de sabor.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$7.00</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Ensalada Fresca" data-price="7.00">
-                        <i class="fas fa-cart-plus mr-2"></i> Añadir al Carrito
+                    <p class="text-3xl font-extrabold text-green-600 mb-4">$7.50</p>
+                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Sopa de Tomate y Albahaca" data-price="7.50">
+                        <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservations Section -->
+    <section id="reservaciones" class="py-16 px-4 bg-red-100 animate-on-scroll">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-red-700 mb-12">Haz tu Reserva</h2>
+            <p class="text-lg md:text-xl text-slate-700 mb-8 max-w-2xl mx-auto">
+                Asegura tu lugar en Sabor Auténtico para una experiencia culinaria inolvidable.
+            </p>
+            <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+                <form id="reservationForm" class="space-y-6">
+                    <div>
+                        <label for="resName" class="block text-slate-700 text-sm font-bold mb-2">Nombre Completo</label>
+                        <input type="text" id="resName" name="resName" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Tu Nombre" required>
+                    </div>
+                    <div>
+                        <label for="resEmail" class="block text-slate-700 text-sm font-bold mb-2">Correo Electrónico</label>
+                        <input type="email" id="resEmail" name="resEmail" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="tu.email@ejemplo.com" required>
+                    </div>
+                    <div>
+                        <label for="resDate" class="block text-slate-700 text-sm font-bold mb-2">Fecha</label>
+                        <input type="date" id="resDate" name="resDate" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" required>
+                    </div>
+                    <div>
+                        <label for="resTime" class="block text-slate-700 text-sm font-bold mb-2">Hora</label>
+                        <input type="time" id="resTime" name="resTime" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" required>
+                    </div>
+                    <div>
+                        <label for="resGuests" class="block text-slate-700 text-sm font-bold mb-2">Número de Personas</label>
+                        <input type="number" id="resGuests" name="resGuests" min="1" max="10" value="2" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" required>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="bg-red-600 text-white font-bold py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">
+                            Confirmar Reserva
+                        </button>
+                    </div>
+                </form>
+                <div id="reservationMessage" class="mt-6 p-4 rounded-lg text-center hidden" role="alert"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Delivery Section -->
+    <section id="domicilio" class="py-16 px-4 bg-yellow-50 animate-on-scroll">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-red-700 mb-12">Envío a Domicilio</h2>
+            <p class="text-lg md:text-xl text-slate-700 mb-8 max-w-3xl mx-auto">
+                Disfruta de tus platillos favoritos de Sabor Auténtico desde la comodidad de tu hogar.
+                Realizamos entregas rápidas y seguras en toda la ciudad.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                <div class="text-left p-6 bg-white rounded-xl shadow-lg">
+                    <h3 class="text-3xl font-bold text-slate-800 mb-4">¿Cómo funciona?</h3>
+                    <ul class="list-disc list-inside text-slate-700 text-lg space-y-2">
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>Explora nuestro menú online.</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>Añade tus platillos al carrito.</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>Procede al pago y confirma tu pedido.</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>¡Recibe tu comida caliente en la puerta de tu casa!</li>
+                    </ul>
+                    <a href="#menu" class="mt-8 bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg inline-block">
+                        <i class="fas fa-utensils mr-2"></i> Pedir Ahora
+                    </a>
+                </div>
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a04229?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Entrega a Domicilio" class="rounded-xl shadow-lg w-full h-auto object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/ef4444/ffffff?text=Entrega';">
+                    <div class="absolute bottom-4 right-4 bg-yellow-400 text-red-800 font-bold text-xl px-4 py-2 rounded-lg shadow-md">
+                        ¡Rápido y Delicioso!
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contacto" class="py-16 px-4 bg-red-500 text-white">
+    <section id="contacto" class="py-16 px-4 bg-red-700 text-white animate-on-scroll">
         <div class="container mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-8">¡Contáctanos!</h2>
-            <p class="text-xl mb-6 max-w-2xl mx-auto">
-                ¿Preguntas, sugerencias o simplemente quieres saludar? ¡Estamos aquí para ti!
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-8">Contáctanos</h2>
+            <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto opacity-90">
+                Estamos listos para atenderte. Visítanos, llámanos o envíanos un mensaje.
             </p>
             <div class="flex flex-col md:flex-row justify-center items-center gap-8">
-                <div class="text-center">
-                    <i class="fas fa-phone-alt text-4xl mb-3 text-yellow-300"></i>
-                    <p class="text-lg font-semibold">Teléfono:</p>
-                    <p class="text-xl">+1 (809) 123-4567</p>
+                <div class="text-center p-6 bg-red-600 rounded-xl shadow-lg flex-1">
+                    <i class="fas fa-map-marker-alt text-5xl mb-3 text-yellow-300"></i>
+                    <p class="text-2xl font-semibold">Ubicación</p>
+                    <p class="text-lg mt-2">Av. Siempre Viva #742, Springfield</p>
+                    <p class="text-lg">Santo Domingo Este, República Dominicana</p>
                 </div>
-                <div class="text-center">
-                    <i class="fas fa-envelope text-4xl mb-3 text-yellow-300"></i>
-                    <p class="text-lg font-semibold">Email:</p>
-                    <p class="text-xl">info@saborexpress.com</p>
+                <div class="text-center p-6 bg-red-600 rounded-xl shadow-lg flex-1">
+                    <i class="fas fa-phone-alt text-5xl mb-3 text-yellow-300"></i>
+                    <p class="text-2xl font-semibold">Teléfono</p>
+                    <p class="text-lg mt-2">+1 (809) 555-1234</p>
+                    <p class="text-lg">¡Llámanos para reservar o pedir!</p>
                 </div>
-                <div class="text-center">
-                    <i class="fas fa-map-marker-alt text-4xl mb-3 text-yellow-300"></i>
-                    <p class="text-lg font-semibold">Dirección:</p>
-                    <p class="text-xl">Calle Principal #123, Santo Domingo Este</p>
+                <div class="text-center p-6 bg-red-600 rounded-xl shadow-lg flex-1">
+                    <i class="fas fa-envelope text-5xl mb-3 text-yellow-300"></i>
+                    <p class="text-2xl font-semibold">Email</p>
+                    <p class="text-lg mt-2">info@saborautentico.com</p>
+                    <p class="text-lg">Envíanos tus preguntas o comentarios.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-red-800 text-white py-8 px-4 rounded-t-lg shadow-inner">
+    <footer class="bg-red-900 text-white py-8 px-4 rounded-t-lg shadow-inner">
         <div class="container mx-auto text-center text-sm">
-            <p>&copy; 2025 Sabor Express. Todos los derechos reservados.</p>
+            <p>&copy; 2025 Sabor Auténtico. Todos los derechos reservados.</p>
             <p class="mt-2">
                 <a href="#" class="text-yellow-400 hover:text-yellow-300 transition duration-300">Política de Privacidad</a> |
                 <a href="#" class="text-yellow-400 hover:text-yellow-300 transition duration-300">Términos de Servicio</a>
@@ -315,10 +515,10 @@ style="background-image: url('https://media.traveler.es/photos/61c5d52fffc04ac0a
     </footer>
 
     <!-- Shopping Cart Modal -->
-    <div id="cartModal" class="fixed inset-0 flex items-center justify-center z-50">
-        <div class="cart-content">
-            <span class="close-button" id="closeCartBtn">&times;</span>
-            <h2 class="text-4xl font-extrabold text-red-700 mb-6 text-center">Tu Carrito</h2>
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal-btn" id="closeCartBtn">&times;</span>
+            <h2 class="text-4xl font-extrabold text-red-700 mb-6 text-center">Tu Pedido</h2>
             <div id="cartItems" class="mb-6 max-h-80 overflow-y-auto">
                 <!-- Cart items will be dynamically added here -->
                 <p id="emptyCartMessage" class="text-slate-600 text-center text-lg">Tu carrito está vacío.</p>
@@ -328,7 +528,7 @@ style="background-image: url('https://media.traveler.es/photos/61c5d52fffc04ac0a
             </div>
             <div class="flex justify-center">
                 <button class="bg-green-600 text-white py-3 px-8 rounded-full hover:bg-green-700 transition duration-300 font-bold shadow-lg">
-                    Proceder al Pago
+                    Confirmar Pedido
                 </button>
             </div>
         </div>
@@ -363,72 +563,48 @@ style="background-image: url('https://media.traveler.es/photos/61c5d52fffc04ac0a
                 document.documentElement.scrollTop = 0;
             }
 
-            // Animation on Scroll for Menu Item Cards
-            const menuCards = document.querySelectorAll('.menu-item-card');
-            const observerOptions = {
+            // Animation on Scroll for sections
+            const animateSections = document.querySelectorAll('.animate-on-scroll');
+            const sectionObserverOptions = {
                 root: null, // viewport
                 rootMargin: '0px',
-                threshold: 0.2 // 20% of the item must be visible
+                threshold: 0.1 // 10% of the section must be visible
             };
-            const observer = new IntersectionObserver((entries, observer) => {
+            const sectionObserver = new IntersectionObserver((entries, observer) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('fade-in');
+                        entry.target.classList.add('is-visible');
                         observer.unobserve(entry.target); // Stop observing once animated
                     }
                 });
-            }, observerOptions);
-            menuCards.forEach(card => {
-                observer.observe(card);
+            }, sectionObserverOptions);
+            animateSections.forEach(section => {
+                sectionObserver.observe(section);
             });
 
             // Shopping Cart Logic
             let cart = []; // Array to store cart items: { name, price, quantity }
             const cartItemCountSpan = document.getElementById('cartItemCount');
+            const cartItemCountMobileSpan = document.getElementById('cartItemCountMobile');
             const cartTotalSpan = document.getElementById('cartTotal');
             const cartItemsContainer = document.getElementById('cartItems');
             const emptyCartMessage = document.getElementById('emptyCartMessage');
             const cartModal = document.getElementById('cartModal');
-            const openCartBtn = document.getElementById('openCartBtn');
+            const openCartBtn = document.getElementById('openCartBtn'); // Desktop cart button
+            const openCartBtnMobile = document.getElementById('openCartBtnMobile'); // Mobile cart button
             const closeCartBtn = document.getElementById('closeCartBtn');
 
-            // Open Cart Modal
-            openCartBtn.addEventListener('click', () => {
-                cartModal.style.display = 'flex';
-                renderCart();
-            });
-
-            // Close Cart Modal
-            closeCartBtn.addEventListener('click', () => {
-                cartModal.style.display = 'none';
-            });
-
-            // Close modal when clicking outside of it
-            window.addEventListener('click', (event) => {
-                if (event.target == cartModal) {
-                    cartModal.style.display = 'none';
-                }
-            });
-
-            // Add to Cart button event listeners
-            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const name = event.target.dataset.name;
-                    const price = parseFloat(event.target.dataset.price);
-                    addToCart(name, price);
+            // Function to attach event listeners to cart buttons (after rendering)
+            function attachCartEventListeners() {
+                document.querySelectorAll('.minus-btn').forEach(button => {
+                    button.onclick = (e) => updateQuantity(e.target.dataset.name, -1);
                 });
-            });
-
-            // Function to add item to cart
-            function addToCart(name, price) {
-                const existingItem = cart.find(item => item.name === name);
-                if (existingItem) {
-                    existingItem.quantity++;
-                } else {
-                    cart.push({ name, price, quantity: 1 });
-                }
-                updateCartCount();
-                renderCart(); // Re-render cart content when adding
+                document.querySelectorAll('.plus-btn').forEach(button => {
+                    button.onclick = (e) => updateQuantity(e.target.dataset.name, 1);
+                });
+                document.querySelectorAll('.remove-item-btn').forEach(button => {
+                    button.onclick = (e) => removeItem(e.target.dataset.name);
+                });
             }
 
             // Function to update cart item quantity
@@ -451,10 +627,11 @@ style="background-image: url('https://media.traveler.es/photos/61c5d52fffc04ac0a
                 renderCart();
             }
 
-            // Function to update cart item count in header
+            // Function to update cart item count in header (both desktop and mobile)
             function updateCartCount() {
                 const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
                 cartItemCountSpan.textContent = totalItems;
+                cartItemCountMobileSpan.textContent = totalItems;
             }
 
             // Function to render cart items in the modal
@@ -484,18 +661,42 @@ style="background-image: url('https://media.traveler.es/photos/61c5d52fffc04ac0a
                 attachCartEventListeners(); // Re-attach listeners for new elements
             }
 
-            // Function to attach event listeners to cart buttons (after rendering)
-            function attachCartEventListeners() {
-                document.querySelectorAll('.minus-btn').forEach(button => {
-                    button.onclick = (e) => updateQuantity(e.target.dataset.name, -1);
+            // Open Cart Modal (Desktop and Mobile buttons)
+            openCartBtn.addEventListener('click', () => {
+                cartModal.style.display = 'flex';
+                renderCart();
+            });
+            openCartBtnMobile.addEventListener('click', () => {
+                cartModal.style.display = 'flex';
+                renderCart();
+            });
+
+            // Close Cart Modal
+            closeCartBtn.addEventListener('click', () => {
+                cartModal.style.display = 'none';
+            });
+
+            // Close modal when clicking outside of it
+            window.addEventListener('click', (event) => {
+                if (event.target == cartModal) {
+                    cartModal.style.display = 'none';
+                }
+            });
+
+            // Add to Cart button event listeners
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const name = event.target.dataset.name;
+                    const price = parseFloat(event.target.dataset.price);
+                    addToCart(name, price);
                 });
-                document.querySelectorAll('.plus-btn').forEach(button => {
-                    button.onclick = (e) => updateQuantity(e.target.dataset.name, 1);
-                });
-                document.querySelectorAll('.remove-item-btn').forEach(button => {
-                    button.onclick = (e) => removeItem(e.target.dataset.name);
-                });
-            }
+            });
+
+            // Initial render of cart (should be empty)
+            updateCartCount();
+            // Call renderCart once after all functions are defined
+            renderCart();
+
 
             // Function to update the total price in the cart
             function updateCartTotal() {
@@ -503,9 +704,85 @@ style="background-image: url('https://media.traveler.es/photos/61c5d52fffc04ac0a
                 cartTotalSpan.textContent = total.toFixed(2);
             }
 
-            // Initial render of cart (should be empty)
-            updateCartCount();
-            renderCart();
+            // Reservation Form Submission
+            const reservationForm = document.getElementById('reservationForm');
+            const reservationMessage = document.getElementById('reservationMessage');
+
+            reservationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const resName = document.getElementById('resName').value;
+                const resEmail = document.getElementById('resEmail').value;
+                const resDate = document.getElementById('resDate').value;
+                const resTime = document.getElementById('resTime').value;
+                const resGuests = document.getElementById('resGuests').value;
+
+                console.log('Reserva Enviada:');
+                console.log('Nombre:', resName);
+                console.log('Email:', resEmail);
+                console.log('Fecha:', resDate);
+                console.log('Hora:', resTime);
+                console.log('Personas:', resGuests);
+
+                reservationMessage.classList.remove('hidden', 'bg-red-100', 'text-red-700');
+                reservationMessage.classList.add('bg-green-100', 'text-green-700');
+                reservationMessage.innerHTML = `¡Gracias, ${resName}! Tu reserva para ${resGuests} personas el ${resDate} a las ${resTime} ha sido confirmada. Te esperamos.`;
+
+                reservationForm.reset();
+                setTimeout(() => {
+                    reservationMessage.classList.add('hidden');
+                }, 7000); // Hide message after 7 seconds
+            });
+
+            // Menu Category Filtering
+            const menuCategoryButtons = document.querySelectorAll('.menu-category-btn');
+            const menuItems = document.querySelectorAll('.menu-item-card');
+
+            menuCategoryButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const category = button.dataset.category;
+
+                    // Remove active state from all buttons and add to clicked one
+                    menuCategoryButtons.forEach(btn => btn.classList.remove('bg-red-700'));
+                    button.classList.add('bg-red-700');
+
+                    menuItems.forEach(item => {
+                        if (category === 'all' || item.dataset.category === category) {
+                            item.style.display = 'flex'; // Show item
+                        } else {
+                            item.style.display = 'none'; // Hide item
+                        }
+                    });
+                });
+            });
+
+            // Set initial active category button (e.g., "Todos")
+            const allCategoryButton = document.querySelector('.menu-category-btn[data-category="all"]');
+            if (allCategoryButton) {
+                allCategoryButton.click();
+            } else {
+                console.error("El botón de categoría 'Todos' no se encontró al cargar la página.");
+            }
+
+            // Drawer Menu Logic
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mobileDrawer = document.getElementById('mobileDrawer');
+            const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+
+            hamburgerBtn.addEventListener('click', () => {
+                mobileDrawer.classList.add('open');
+            });
+
+            drawerCloseBtn.addEventListener('click', () => {
+                mobileDrawer.classList.remove('open');
+            });
+
+            // Close drawer when a link inside it is clicked
+            mobileDrawer.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileDrawer.classList.remove('open');
+                });
+            });
         });
     </script>
 </body>
