@@ -14,7 +14,7 @@
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #fdfcfc; /* Very light grey/off-white */
-            color: #334155; /* Slate-700 */
+            color: #1e293b; /* Slate-800 for better contrast */
         }
         .container {
             max-width: 1200px;
@@ -72,7 +72,7 @@
             z-index: 99;
             border: none;
             outline: none;
-            background-color: #ef4444; /* Red-500 */
+            background-color: #dc2626; /* Red-600 */
             color: white;
             cursor: pointer;
             padding: 15px;
@@ -82,13 +82,13 @@
             transition: background-color 0.3s, transform 0.3s;
         }
         #backToTopBtn:hover {
-            background-color: #dc2626; /* Red-600 */
+            background-color: #b91c1c; /* Red-700 */
             transform: translateY(-2px);
         }
 
-        /* Modal styles */
+        /* Modal styles (Shopping Cart) */
         .modal {
-            display: none; /* Hidden by default - THIS WAS CHANGED */
+            display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
             z-index: 100; /* Sit on top */
             left: 0;
@@ -126,7 +126,7 @@
         }
         .close-modal-btn:hover,
         .close-modal-btn:focus {
-            color: #ef4444; /* Red-500 */
+            color: #dc2626; /* Red-600 */
             text-decoration: none;
             cursor: pointer;
         }
@@ -160,6 +160,132 @@
         .remove-item-btn:hover {
             background-color: #dc2626; /* Red-600 */
         }
+
+        /* Drawer Menu Styles */
+        .drawer-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 80%; /* Adjust as needed, e.g., 80% of screen width */
+            max-width: 300px; /* Max width for larger mobiles/small tablets */
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.2); /* Transparent white */
+            backdrop-filter: blur(10px); /* Blurred background */
+            -webkit-backdrop-filter: blur(10px); /* For Safari */
+            transform: translateX(100%); /* Start off-screen to the right */
+            transition: transform 0.4s ease-out;
+            z-index: 90; /* Below cart modal, above main content */
+            padding: 2rem;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .drawer-menu.open {
+            transform: translateX(0); /* Slide in */
+        }
+        .drawer-close-btn {
+            align-self: flex-end; /* Push to top right of drawer */
+            font-size: 2.5rem;
+            color: #dc2626; /* Red-600 */
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            transition: color 0.3s;
+        }
+        .drawer-close-btn:hover {
+            color: #b91c1c; /* Red-700 */
+        }
+        .drawer-nav-links a {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 0;
+            color: #1e293b; /* Slate-800 */
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: left;
+            transition: color 0.3s, background-color 0.3s;
+            border-radius: 0.5rem;
+        }
+        .drawer-nav-links a:hover {
+            color: #dc2626; /* Red-600 */
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Hamburger Icon */
+        .hamburger-icon {
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+            display: block; /* Show by default on small screens */
+        }
+
+        /* Hide regular nav links and show hamburger on small screens */
+        @media (max-width: 767px) { /* Tailwind's 'md' breakpoint is 768px */
+            .header-nav-links {
+                display: none;
+            }
+            .hamburger-icon {
+                display: block;
+            }
+        }
+
+        /* Hide hamburger and show regular nav links on medium and larger screens */
+        @media (min-width: 768px) {
+            .header-nav-links {
+                display: flex !important; /* Override flex-col from above */
+                flex-direction: row !important;
+                space-x: 1.5rem; /* Tailwind's space-x-6 */
+            }
+            .hamburger-icon {
+                display: none;
+            }
+        }
+
+        /* Responsive adjustments for text sizes and padding */
+        @media (max-width: 640px) { /* Small screens (sm) */
+            .hero-text-animate {
+                font-size: 3rem; /* text-4xl */
+            }
+            .hero-text-animate.delay-1 {
+                font-size: 1.125rem; /* text-lg */
+            }
+            .menu-item-card h3 {
+                font-size: 1.5rem; /* text-xl */
+            }
+            .menu-item-card p {
+                font-size: 0.875rem; /* text-sm */
+            }
+            .menu-item-card .text-3xl {
+                font-size: 2rem; /* text-2xl */
+            }
+            .add-to-cart-btn {
+                padding: 0.75rem 1.5rem; /* py-3 px-6 */
+                font-size: 0.875rem; /* text-sm */
+            }
+            .reservation-form-container {
+                padding: 1.5rem; /* p-6 */
+            }
+            .reservation-form-container label {
+                font-size: 0.875rem; /* text-sm */
+            }
+            .reservation-form-container input {
+                padding: 0.625rem 1rem; /* py-2.5 px-4 */
+                font-size: 0.875rem; /* text-sm */
+            }
+            .reservation-form-container button {
+                padding: 0.75rem 1.5rem; /* py-3 px-6 */
+                font-size: 0.875rem; /* text-sm */
+            }
+            .contact-info-card {
+                padding: 1.5rem; /* p-6 */
+            }
+            .contact-info-card i {
+                font-size: 3rem; /* text-4xl */
+            }
+            .contact-info-card p {
+                font-size: 1rem; /* text-base */
+            }
+        }
     </style>
 </head>
 <body>
@@ -170,128 +296,151 @@
             <a href="#" class="text-3xl font-extrabold text-white rounded-lg p-2 hover:bg-red-800 transition duration-300">
                 Sabor Auténtico
             </a>
-            <ul class="flex space-x-6 items-center">
-                <li><a href="#inicio" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Inicio</a></li>
-                <li><a href="#menu" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Menú</a></li>
-                <li><a href="#reservaciones" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Reservaciones</a></li>
-                <li><a href="#domicilio" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">A Domicilio</a></li>
-                <li><a href="#contacto" class="text-white hover:text-yellow-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Contacto</a></li>
+            
+            <!-- Hamburger Icon for Mobile -->
+            <button id="hamburgerBtn" class="hamburger-icon md:hidden">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Regular Navigation Links (Hidden on Mobile, shown on MD+) -->
+            <ul class="header-nav-links hidden md:flex md:space-x-6 items-center">
+                <li><a href="#inicio" class="text-white hover:text-amber-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Inicio</a></li>
+                <li><a href="#menu" class="text-white hover:text-amber-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Menú</a></li>
+                <li><a href="#reservaciones" class="text-white hover:text-amber-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Reservaciones</a></li>
+                <li><a href="#domicilio" class="text-white hover:text-amber-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">A Domicilio</a></li>
+                <li><a href="#contacto" class="text-white hover:text-amber-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-red-800">Contacto</a></li>
                 <li>
-                    <button id="openCartBtn" class="bg-yellow-400 text-red-800 font-bold py-2 px-4 rounded-full hover:bg-yellow-500 transition duration-300 flex items-center shadow-md">
+                    <button id="openCartBtn" class="bg-amber-500 text-red-800 font-bold py-2 px-4 rounded-full hover:bg-amber-600 transition duration-300 flex items-center shadow-md">
                         <i class="fas fa-shopping-cart mr-2"></i> Carrito (<span id="cartItemCount">0</span>)
                     </button>
                 </li>
             </ul>
+            <!-- Cart button for mobile (always visible) -->
+            <button id="openCartBtnMobile" class="bg-amber-500 text-red-800 font-bold py-2 px-4 rounded-full hover:bg-amber-600 transition duration-300 flex items-center shadow-md md:hidden">
+                <i class="fas fa-shopping-cart mr-2"></i> (<span id="cartItemCountMobile">0</span>)
+            </button>
         </nav>
     </header>
 
+    <!-- Mobile Drawer Menu -->
+    <div id="mobileDrawer" class="drawer-menu">
+        <button id="drawerCloseBtn" class="drawer-close-btn">&times;</button>
+        <div class="drawer-nav-links w-full">
+            <a href="#menu" class="hover:bg-red-100">Menú</a>
+            <a href="#contacto" class="hover:bg-red-100">Contacto</a>
+            <!-- You can add more links here if needed, but per request, only Menu and Contact -->
+        </div>
+    </div>
+
+
     <!-- Hero Section -->
-    <section id="inicio" class="bg-cover bg-center h-[600px] flex items-center justify-center text-white relative" style="background-image: url('https://media.traveler.es/photos/61c5d52fffc04ac0ad2208f4/16:9/w_2560%2Cc_limit/2AB9DD5.jpg');">
-       
+    <section id="inicio" class="bg-cover bg-center h-[600px] flex items-center justify-center text-white relative" style="background-image: url('https://img.freepik.com/fotos-premium/mesa-llena-platos-restaurante_1268-14314.jpg');">
         <div class="absolute inset-0 bg-black opacity-60"></div>
-        <div class="container mx-auto text-center z-10">
-            <h1 class="text-7xl font-extrabold mb-4 leading-tight hero-text-animate">Sabor que Inspira, Experiencia que Deleita</h1>
-            <p class="text-2xl mb-8 max-w-3xl mx-auto opacity-90 hero-text-animate delay-1">
+        <div class="container mx-auto text-center z-10 p-4">
+            <h1 class="text-5xl md:text-7xl font-extrabold mb-4 leading-tight hero-text-animate">Sabor que Inspira, Experiencia que Deleita</h1>
+            <p class="text-lg md:text-2xl mb-8 max-w-3xl mx-auto opacity-90 hero-text-animate delay-1">
                 Descubre la auténtica cocina con ingredientes frescos y pasión en cada plato.
             </p>
-            <a href="#reservaciones" class="bg-yellow-400 text-red-800 hover:bg-yellow-500 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block hero-text-animate delay-2">
-                Haz tu Reserva Ahora
-            </a>
-            <a href="#menu" class="ml-4 bg-red-600 text-white hover:bg-red-700 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block hero-text-animate delay-3">
-                Explora Nuestro Menú
-            </a>
+            <div class="flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <a href="#reservaciones" class="bg-amber-500 text-red-800 hover:bg-amber-600 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block hero-text-animate delay-2">
+                    Haz tu Reserva Ahora
+                </a>
+                <a href="#menu" class="bg-red-700 text-white hover:bg-red-800 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block hero-text-animate delay-3">
+                    Explora Nuestro Menú
+                </a>
+            </div>
         </div>
     </section>
 
     <!-- Menu Section -->
-    <section id="menu" class="py-16 px-4 bg-yellow-50 animate-on-scroll">
+    <section id="menu" class="py-16 px-4 bg-gray-50 animate-on-scroll">
         <div class="container mx-auto">
-            <h2 class="text-5xl font-extrabold text-center text-red-700 mb-12">Nuestro Exquisito Menú</h2>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-center text-red-700 mb-12">Nuestro Exquisito Menú</h2>
 
-            <!-- Categorías de Menú (Opcional: puedes añadir filtros aquí) -->
-            <div class="flex justify-center space-x-4 mb-10">
-                <button class="menu-category-btn bg-red-500 text-white py-2 px-6 rounded-full hover:bg-red-600 transition duration-300 shadow-md" data-category="all">Todos</button>
-                <button class="menu-category-btn bg-red-500 text-white py-2 px-6 rounded-full hover:bg-red-600 transition duration-300 shadow-md" data-category="entradas">Entradas</button>
-                <button class="menu-category-btn bg-red-500 text-white py-2 px-6 rounded-full hover:bg-red-600 transition duration-300 shadow-md" data-category="principales">Platos Principales</button>
-                <button class="menu-category-btn bg-red-500 text-white py-2 px-6 rounded-full hover:bg-red-600 transition duration-300 shadow-md" data-category="postres">Postres</button>
-                <button class="menu-category-btn bg-red-500 text-white py-2 px-6 rounded-full hover:bg-red-600 transition duration-300 shadow-md" data-category="bebidas">Bebidas</button>
+            <!-- Categorías de Menú -->
+            <div class="flex flex-wrap justify-center space-x-2 md:space-x-4 mb-10">
+                <button class="menu-category-btn bg-red-600 text-white py-2 px-4 md:px-6 rounded-full hover:bg-red-700 transition duration-300 shadow-md mb-2" data-category="all">Todos</button>
+                <button class="menu-category-btn bg-red-600 text-white py-2 px-4 md:px-6 rounded-full hover:bg-red-700 transition duration-300 shadow-md mb-2" data-category="entradas">Entradas</button>
+                <button class="menu-category-btn bg-red-600 text-white py-2 px-4 md:px-6 rounded-full hover:bg-red-700 transition duration-300 shadow-md mb-2" data-category="principales">Platos Principales</button>
+                <button class="menu-category-btn bg-red-600 text-white py-2 px-4 md:px-6 rounded-full hover:bg-red-700 transition duration-300 shadow-md mb-2" data-category="postres">Postres</button>
+                <button class="menu-category-btn bg-red-600 text-white py-2 px-4 md:px-6 rounded-full hover:bg-red-700 transition duration-300 shadow-md mb-2" data-category="bebidas">Bebidas</button>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 <!-- Plato 1: Salmón a la Parrilla -->
                 <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="principales">
-                    <img src="https://media.zummocorp.com/mask-group-1687945100cdnbI.webp" alt="Salmón a la Parrilla" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Salmón';">
+                    <img src="https://media.zummocorp.com/mask-group-1687945100cdnbI.webp" alt="Salmón a la Parrilla" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/dc2626/ffffff?text=Salmón';">
                     <h3 class="text-2xl font-bold text-slate-800 mb-2">Salmón a la Parrilla</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         Filete de salmón fresco con hierbas aromáticas, acompañado de espárragos y patatas asadas.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$22.50</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Salmón a la Parrilla" data-price="22.50">
+                    <p class="text-3xl font-extrabold text-emerald-600 mb-4">$22.50</p>
+                    <button class="add-to-cart-btn bg-red-700 text-white py-3 px-8 rounded-full hover:bg-red-800 transition duration-300 font-bold shadow-lg" data-name="Salmón a la Parrilla" data-price="22.50">
                         <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
                 </div>
 
                 <!-- Plato 2: Pasta Carbonara -->
                 <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="principales">
-                    <img src="https://www.cookingclassy.com/wp-content/uploads/2020/10/spaghetti-carbonara-01-500x500.jpg" alt="Pasta Carbonara" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Carbonara';">
+                    <img src="https://www.cookingclassy.com/wp-content/uploads/2020/10/spaghetti-carbonara-01-500x500.jpg" alt="Pasta Carbonara" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/dc2626/ffffff?text=Carbonara';">
                     <h3 class="text-2xl font-bold text-slate-800 mb-2">Pasta Carbonara</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         Clásica pasta italiana con huevo, queso pecorino, guanciale y pimienta negra.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$18.00</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Pasta Carbonara" data-price="18.00">
+                    <p class="text-3xl font-extrabold text-emerald-600 mb-4">$18.00</p>
+                    <button class="add-to-cart-btn bg-red-700 text-white py-3 px-8 rounded-full hover:bg-red-800 transition duration-300 font-bold shadow-lg" data-name="Pasta Carbonara" data-price="18.00">
                         <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
                 </div>
 
                 <!-- Plato 3: Ensalada Caprese -->
                 <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="entradas">
-                    <img src="https://okdiario.com/img/2016/11/26/receta-de-ensalada-caprese.jpg" alt="Ensalada Caprese" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Caprese';">
+                    <img src="https://okdiario.com/img/2016/11/26/receta-de-ensalada-caprese.jpg" alt="Ensalada Caprese" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/dc2626/ffffff?text=Caprese';">
                     <h3 class="text-2xl font-bold text-slate-800 mb-2">Ensalada Caprese</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         Tomates frescos, mozzarella de búfala, albahaca y un toque de aceite de oliva virgen extra.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$10.00</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Ensalada Caprese" data-price="10.00">
+                    <p class="text-3xl font-extrabold text-emerald-600 mb-4">$10.00</p>
+                    <button class="add-to-cart-btn bg-red-700 text-white py-3 px-8 rounded-full hover:bg-red-800 transition duration-300 font-bold shadow-lg" data-name="Ensalada Caprese" data-price="10.00">
                         <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
                 </div>
 
                 <!-- Plato 4: Tiramisú -->
                 <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="postres">
-                    <img src="https://www.recetasnestle.com.ec/sites/default/files/srh_recipes/7f45d6f8807ebc775928651a3398dce9.png" alt="Tiramisú" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Tiramisú';">
+                    <img src="https://www.recetasnestle.com.ec/sites/default/files/srh_recipes/7f45d6f8807ebc775928651a3398dce9.png" alt="Tiramisú" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/dc2626/ffffff?text=Tiramisú';">
                     <h3 class="text-2xl font-bold text-slate-800 mb-2">Tiramisú</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         El clásico postre italiano con capas de bizcocho, café, mascarpone y cacao.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$8.50</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Tiramisú" data-price="8.50">
+                    <p class="text-3xl font-extrabold text-emerald-600 mb-4">$8.50</p>
+                    <button class="add-to-cart-btn bg-red-700 text-white py-3 px-8 rounded-full hover:bg-red-800 transition duration-300 font-bold shadow-lg" data-name="Tiramisú" data-price="8.50">
                         <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
                 </div>
 
                 <!-- Plato 5: Vino Tinto (Bebida) -->
                 <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="bebidas">
-                    <img src="https://www.finedininglovers.com/es/sites/g/files/xknfdk1706/files/2023-10/Vinos%20tintos%20dulces.jpg" alt="Vino Tinto" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Vino';">
+                    <img src="https://www.finedininglovers.com/es/sites/g/files/xknfdk1706/files/2023-10/Vinos%20tintos%20dulces.jpg" alt="Vino Tinto" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/dc2626/ffffff?text=Vino';">
                     <h3 class="text-2xl font-bold text-slate-800 mb-2">Vino Tinto (Copa)</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         Selección de nuestro vino de la casa, perfecto para maridar.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$9.00</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Vino Tinto (Copa)" data-price="9.00">
+                    <p class="text-3xl font-extrabold text-emerald-600 mb-4">$9.00</p>
+                    <button class="add-to-cart-btn bg-red-700 text-white py-3 px-8 rounded-full hover:bg-red-800 transition duration-300 font-bold shadow-lg" data-name="Vino Tinto (Copa)" data-price="9.00">
                         <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
                 </div>
 
                 <!-- Plato 6: Sopa de Tomate y Albahaca -->
                 <div class="menu-item-card bg-white rounded-xl shadow-lg overflow-hidden p-6 flex flex-col items-center text-center" data-category="entradas">
-                    <img src="https://images.unsplash.com/photo-1547592180-85f173990554?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sopa de Tomate y Albahaca" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/ef4444/ffffff?text=Sopa';">
+                    <img src="https://images.unsplash.com/photo-1547592180-85f173990554?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Sopa de Tomate y Albahaca" class="w-full h-48 object-cover rounded-lg mb-4" onerror="this.onerror=null; this.src='https://placehold.co/300x200/dc2626/ffffff?text=Sopa';">
                     <h3 class="text-2xl font-bold text-slate-800 mb-2">Sopa de Tomate y Albahaca</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         Una sopa reconfortante, cremosa y llena de sabor.
                     </p>
-                    <p class="text-3xl font-extrabold text-green-600 mb-4">$7.50</p>
-                    <button class="add-to-cart-btn bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg" data-name="Sopa de Tomate y Albahaca" data-price="7.50">
+                    <p class="text-3xl font-extrabold text-emerald-600 mb-4">$7.50</p>
+                    <button class="add-to-cart-btn bg-red-700 text-white py-3 px-8 rounded-full hover:bg-red-800 transition duration-300 font-bold shadow-lg" data-name="Sopa de Tomate y Albahaca" data-price="7.50">
                         <i class="fas fa-plus-circle mr-2"></i> Añadir al Carrito
                     </button>
                 </div>
@@ -300,36 +449,36 @@
     </section>
 
     <!-- Reservations Section -->
-    <section id="reservaciones" class="py-16 px-4 bg-red-100 animate-on-scroll">
+    <section id="reservaciones" class="py-16 px-4 bg-indigo-50 animate-on-scroll">
         <div class="container mx-auto text-center">
-            <h2 class="text-5xl font-extrabold text-red-700 mb-12">Haz tu Reserva</h2>
-            <p class="text-xl text-slate-700 mb-8 max-w-2xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-indigo-800 mb-12">Haz tu Reserva</h2>
+            <p class="text-lg md:text-xl text-slate-700 mb-8 max-w-2xl mx-auto">
                 Asegura tu lugar en Sabor Auténtico para una experiencia culinaria inolvidable.
             </p>
-            <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-lg">
+            <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-2xl border-2 border-indigo-200 reservation-form-container">
                 <form id="reservationForm" class="space-y-6">
                     <div>
-                        <label for="resName" class="block text-slate-700 text-sm font-bold mb-2">Nombre Completo</label>
-                        <input type="text" id="resName" name="resName" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="Tu Nombre" required>
+                        <label for="resName" class="block text-slate-700 text-base font-semibold mb-2">Nombre Completo</label>
+                        <input type="text" id="resName" name="resName" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200" placeholder="Tu Nombre" required>
                     </div>
                     <div>
-                        <label for="resEmail" class="block text-slate-700 text-sm font-bold mb-2">Correo Electrónico</label>
-                        <input type="email" id="resEmail" name="resEmail" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" placeholder="tu.email@ejemplo.com" required>
+                        <label for="resEmail" class="block text-slate-700 text-base font-semibold mb-2">Correo Electrónico</label>
+                        <input type="email" id="resEmail" name="resEmail" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200" placeholder="tu.email@ejemplo.com" required>
                     </div>
                     <div>
-                        <label for="resDate" class="block text-slate-700 text-sm font-bold mb-2">Fecha</label>
-                        <input type="date" id="resDate" name="resDate" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" required>
+                        <label for="resDate" class="block text-slate-700 text-base font-semibold mb-2">Fecha</label>
+                        <input type="date" id="resDate" name="resDate" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200" required>
                     </div>
                     <div>
-                        <label for="resTime" class="block text-slate-700 text-sm font-bold mb-2">Hora</label>
-                        <input type="time" id="resTime" name="resTime" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" required>
+                        <label for="resTime" class="block text-slate-700 text-base font-semibold mb-2">Hora</label>
+                        <input type="time" id="resTime" name="resTime" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200" required>
                     </div>
                     <div>
-                        <label for="resGuests" class="block text-slate-700 text-sm font-bold mb-2">Número de Personas</label>
-                        <input type="number" id="resGuests" name="resGuests" min="1" max="10" value="2" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent" required>
+                        <label for="resGuests" class="block text-slate-700 text-base font-semibold mb-2">Número de Personas</label>
+                        <input type="number" id="resGuests" name="resGuests" min="1" max="10" value="2" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200" required>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="bg-red-600 text-white font-bold py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 transform hover:scale-105 shadow-lg">
+                        <button type="submit" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-full hover:bg-indigo-700 transition duration-300 transform hover:scale-105 shadow-lg">
                             Confirmar Reserva
                         </button>
                     </div>
@@ -340,10 +489,10 @@
     </section>
 
     <!-- Delivery Section -->
-    <section id="domicilio" class="py-16 px-4 bg-yellow-50 animate-on-scroll">
+    <section id="domicilio" class="py-16 px-4 bg-gray-50 animate-on-scroll">
         <div class="container mx-auto text-center">
-            <h2 class="text-5xl font-extrabold text-red-700 mb-12">Envío a Domicilio</h2>
-            <p class="text-xl text-slate-700 mb-8 max-w-3xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold text-red-700 mb-12">Envío a Domicilio</h2>
+            <p class="text-lg md:text-xl text-slate-700 mb-8 max-w-3xl mx-auto">
                 Disfruta de tus platillos favoritos de Sabor Auténtico desde la comodidad de tu hogar.
                 Realizamos entregas rápidas y seguras en toda la ciudad.
             </p>
@@ -351,18 +500,18 @@
                 <div class="text-left p-6 bg-white rounded-xl shadow-lg">
                     <h3 class="text-3xl font-bold text-slate-800 mb-4">¿Cómo funciona?</h3>
                     <ul class="list-disc list-inside text-slate-700 text-lg space-y-2">
-                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>Explora nuestro menú online.</li>
-                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>Añade tus platillos al carrito.</li>
-                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>Procede al pago y confirma tu pedido.</li>
-                        <li><i class="fas fa-check-circle text-green-500 mr-2"></i>¡Recibe tu comida caliente en la puerta de tu casa!</li>
+                        <li><i class="fas fa-check-circle text-emerald-500 mr-2"></i>Explora nuestro menú online.</li>
+                        <li><i class="fas fa-check-circle text-emerald-500 mr-2"></i>Añade tus platillos al carrito.</li>
+                        <li><i class="fas fa-check-circle text-emerald-500 mr-2"></i>Procede al pago y confirma tu pedido.</li>
+                        <li><i class="fas fa-check-circle text-emerald-500 mr-2"></i>¡Recibe tu comida caliente en la puerta de tu casa!</li>
                     </ul>
-                    <a href="#menu" class="mt-8 bg-red-600 text-white py-3 px-8 rounded-full hover:bg-red-700 transition duration-300 font-bold shadow-lg inline-block">
+                    <a href="#menu" class="mt-8 bg-red-700 text-white py-3 px-8 rounded-full hover:bg-red-800 transition duration-300 font-bold shadow-lg inline-block">
                         <i class="fas fa-utensils mr-2"></i> Pedir Ahora
                     </a>
                 </div>
                 <div class="relative">
-                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a04229?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Entrega a Domicilio" class="rounded-xl shadow-lg w-full h-auto object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/ef4444/ffffff?text=Entrega';">
-                    <div class="absolute bottom-4 right-4 bg-yellow-400 text-red-800 font-bold text-xl px-4 py-2 rounded-lg shadow-md">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a04229?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Entrega a Domicilio" class="rounded-xl shadow-lg w-full h-auto object-cover" onerror="this.onerror=null; this.src='https://placehold.co/600x400/dc2626/ffffff?text=Entrega';">
+                    <div class="absolute bottom-4 right-4 bg-amber-500 text-red-800 font-bold text-xl px-4 py-2 rounded-lg shadow-md">
                         ¡Rápido y Delicioso!
                     </div>
                 </div>
@@ -373,25 +522,25 @@
     <!-- Contact Section -->
     <section id="contacto" class="py-16 px-4 bg-red-700 text-white animate-on-scroll">
         <div class="container mx-auto text-center">
-            <h2 class="text-5xl font-extrabold mb-8">Contáctanos</h2>
-            <p class="text-xl mb-6 max-w-2xl mx-auto opacity-90">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-8">Contáctanos</h2>
+            <p class="text-lg md:text-xl mb-6 max-w-2xl mx-auto opacity-90">
                 Estamos listos para atenderte. Visítanos, llámanos o envíanos un mensaje.
             </p>
             <div class="flex flex-col md:flex-row justify-center items-center gap-8">
-                <div class="text-center p-6 bg-red-600 rounded-xl shadow-lg flex-1">
-                    <i class="fas fa-map-marker-alt text-5xl mb-3 text-yellow-300"></i>
+                <div class="text-center p-6 bg-red-600 rounded-xl shadow-lg flex-1 contact-info-card">
+                    <i class="fas fa-map-marker-alt text-5xl mb-3 text-amber-300"></i>
                     <p class="text-2xl font-semibold">Ubicación</p>
                     <p class="text-lg mt-2">Av. Siempre Viva #742, Springfield</p>
                     <p class="text-lg">Santo Domingo Este, República Dominicana</p>
                 </div>
-                <div class="text-center p-6 bg-red-600 rounded-xl shadow-lg flex-1">
-                    <i class="fas fa-phone-alt text-5xl mb-3 text-yellow-300"></i>
+                <div class="text-center p-6 bg-red-600 rounded-xl shadow-lg flex-1 contact-info-card">
+                    <i class="fas fa-phone-alt text-5xl mb-3 text-amber-300"></i>
                     <p class="text-2xl font-semibold">Teléfono</p>
                     <p class="text-lg mt-2">+1 (809) 555-1234</p>
                     <p class="text-lg">¡Llámanos para reservar o pedir!</p>
                 </div>
-                <div class="text-center p-6 bg-red-600 rounded-xl shadow-lg flex-1">
-                    <i class="fas fa-envelope text-5xl mb-3 text-yellow-300"></i>
+                <div class="text-center p-6 bg-red-600 rounded-xl shadow-lg flex-1 contact-info-card">
+                    <i class="fas fa-envelope text-5xl mb-3 text-amber-300"></i>
                     <p class="text-2xl font-semibold">Email</p>
                     <p class="text-lg mt-2">info@saborautentico.com</p>
                     <p class="text-lg">Envíanos tus preguntas o comentarios.</p>
@@ -405,8 +554,8 @@
         <div class="container mx-auto text-center text-sm">
             <p>&copy; 2025 Sabor Auténtico. Todos los derechos reservados.</p>
             <p class="mt-2">
-                <a href="#" class="text-yellow-400 hover:text-yellow-300 transition duration-300">Política de Privacidad</a> |
-                <a href="#" class="text-yellow-400 hover:text-yellow-300 transition duration-300">Términos de Servicio</a>
+                <a href="#" class="text-amber-400 hover:text-amber-300 transition duration-300">Política de Privacidad</a> |
+                <a href="#" class="text-amber-400 hover:text-amber-300 transition duration-300">Términos de Servicio</a>
             </p>
         </div>
     </footer>
@@ -424,7 +573,7 @@
                 Total: $<span id="cartTotal">0.00</span>
             </div>
             <div class="flex justify-center">
-                <button class="bg-green-600 text-white py-3 px-8 rounded-full hover:bg-green-700 transition duration-300 font-bold shadow-lg">
+                <button class="bg-emerald-600 text-white py-3 px-8 rounded-full hover:bg-emerald-700 transition duration-300 font-bold shadow-lg">
                     Confirmar Pedido
                 </button>
             </div>
@@ -479,42 +628,30 @@
                 sectionObserver.observe(section);
             });
 
-            // Shopping Cart Logic (reused from previous version, adapted for restaurant context)
+            // Shopping Cart Logic
             let cart = []; // Array to store cart items: { name, price, quantity }
             const cartItemCountSpan = document.getElementById('cartItemCount');
+            const cartItemCountMobileSpan = document.getElementById('cartItemCountMobile');
             const cartTotalSpan = document.getElementById('cartTotal');
             const cartItemsContainer = document.getElementById('cartItems');
             const emptyCartMessage = document.getElementById('emptyCartMessage');
             const cartModal = document.getElementById('cartModal');
-            const openCartBtn = document.getElementById('openCartBtn');
+            const openCartBtn = document.getElementById('openCartBtn'); // Desktop cart button
+            const openCartBtnMobile = document.getElementById('openCartBtnMobile'); // Mobile cart button
             const closeCartBtn = document.getElementById('closeCartBtn');
 
-            // Open Cart Modal
-            openCartBtn.addEventListener('click', () => {
-                cartModal.style.display = 'flex';
-                renderCart();
-            });
-
-            // Close Cart Modal
-            closeCartBtn.addEventListener('click', () => {
-                cartModal.style.display = 'none';
-            });
-
-            // Close modal when clicking outside of it
-            window.addEventListener('click', (event) => {
-                if (event.target == cartModal) {
-                    cartModal.style.display = 'none';
-                }
-            });
-
-            // Add to Cart button event listeners
-            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const name = event.target.dataset.name;
-                    const price = parseFloat(event.target.dataset.price);
-                    addToCart(name, price);
+            // Function to attach event listeners to cart buttons (after rendering)
+            function attachCartEventListeners() {
+                document.querySelectorAll('.minus-btn').forEach(button => {
+                    button.onclick = (e) => updateQuantity(e.target.dataset.name, -1);
                 });
-            });
+                document.querySelectorAll('.plus-btn').forEach(button => {
+                    button.onclick = (e) => updateQuantity(e.target.dataset.name, 1);
+                });
+                document.querySelectorAll('.remove-item-btn').forEach(button => {
+                    button.onclick = (e) => removeItem(e.target.dataset.name);
+                });
+            }
 
             // Function to add item to cart
             function addToCart(name, price) {
@@ -548,10 +685,11 @@
                 renderCart();
             }
 
-            // Function to update cart item count in header
+            // Function to update cart item count in header (both desktop and mobile)
             function updateCartCount() {
                 const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
                 cartItemCountSpan.textContent = totalItems;
+                cartItemCountMobileSpan.textContent = totalItems;
             }
 
             // Function to render cart items in the modal
@@ -581,28 +719,48 @@
                 attachCartEventListeners(); // Re-attach listeners for new elements
             }
 
-            // Function to attach event listeners to cart buttons (after rendering)
-            function attachCartEventListeners() {
-                document.querySelectorAll('.minus-btn').forEach(button => {
-                    button.onclick = (e) => updateQuantity(e.target.dataset.name, -1);
+            // Open Cart Modal (Desktop and Mobile buttons)
+            openCartBtn.addEventListener('click', () => {
+                cartModal.style.display = 'flex';
+                renderCart();
+            });
+            openCartBtnMobile.addEventListener('click', () => {
+                cartModal.style.display = 'flex';
+                renderCart();
+            });
+
+            // Close Cart Modal
+            closeCartBtn.addEventListener('click', () => {
+                cartModal.style.display = 'none';
+            });
+
+            // Close modal when clicking outside of it
+            window.addEventListener('click', (event) => {
+                if (event.target == cartModal) {
+                    cartModal.style.display = 'none';
+                }
+            });
+
+            // Add to Cart button event listeners
+            document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const name = event.target.dataset.name;
+                    const price = parseFloat(event.target.dataset.price);
+                    addToCart(name, price);
                 });
-                document.querySelectorAll('.plus-btn').forEach(button => {
-                    button.onclick = (e) => updateQuantity(e.target.dataset.name, 1);
-                });
-                document.querySelectorAll('.remove-item-btn').forEach(button => {
-                    button.onclick = (e) => removeItem(e.target.dataset.name);
-                });
-            }
+            });
+
+            // Initial render of cart (should be empty)
+            updateCartCount();
+            // Call renderCart once after all functions are defined
+            renderCart();
+
 
             // Function to update the total price in the cart
             function updateCartTotal() {
                 const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
                 cartTotalSpan.textContent = total.toFixed(2);
             }
-
-            // Initial render of cart (should be empty)
-            updateCartCount();
-            renderCart();
 
             // Reservation Form Submission
             const reservationForm = document.getElementById('reservationForm');
@@ -625,7 +783,7 @@
                 console.log('Personas:', resGuests);
 
                 reservationMessage.classList.remove('hidden', 'bg-red-100', 'text-red-700');
-                reservationMessage.classList.add('bg-green-100', 'text-green-700');
+                reservationMessage.classList.add('bg-emerald-100', 'text-emerald-700'); /* Changed to emerald for success message */
                 reservationMessage.innerHTML = `¡Gracias, ${resName}! Tu reserva para ${resGuests} personas el ${resDate} a las ${resTime} ha sido confirmada. Te esperamos.`;
 
                 reservationForm.reset();
@@ -634,7 +792,7 @@
                 }, 7000); // Hide message after 7 seconds
             });
 
-            // Menu Category Filtering (New functionality)
+            // Menu Category Filtering
             const menuCategoryButtons = document.querySelectorAll('.menu-category-btn');
             const menuItems = document.querySelectorAll('.menu-item-card');
 
@@ -657,7 +815,32 @@
             });
 
             // Set initial active category button (e.g., "Todos")
-            document.querySelector('.menu-category-btn[data-category="all"]').click();
+            const allCategoryButton = document.querySelector('.menu-category-btn[data-category="all"]');
+            if (allCategoryButton) {
+                allCategoryButton.click();
+            } else {
+                console.error("El botón de categoría 'Todos' no se encontró al cargar la página.");
+            }
+
+            // Drawer Menu Logic
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mobileDrawer = document.getElementById('mobileDrawer');
+            const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+
+            hamburgerBtn.addEventListener('click', () => {
+                mobileDrawer.classList.add('open');
+            });
+
+            drawerCloseBtn.addEventListener('click', () => {
+                mobileDrawer.classList.remove('open');
+            });
+
+            // Close drawer when a link inside it is clicked
+            mobileDrawer.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileDrawer.classList.remove('open');
+                });
+            });
         });
     </script>
 </body>
