@@ -1,605 +1,309 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nuestros Servicios - [Nombre de tu Empresa]</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Servicios Profesionales | Tu Marca</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
     <style>
+        /* Custom Styles & Tailwind Configuration */
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Tailwind: bg-slate-50 */
-            color: #334155; /* Tailwind: text-slate-700 */
+            background-color: #0f172a; /* slate-900 */
+            color: #cbd5e1; /* slate-300 */
         }
-        .container {
-            max-width: 1200px;
+        
+        /* Custom class for scroll animations */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
         }
-        .service-card {
-            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            opacity: 0; /* Estado inicial para la animación de fade-in */
-            transform: translateY(20px); /* Estado inicial para la animación de deslizamiento hacia arriba */
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .service-card.fade-in {
+        
+        .is-visible {
             opacity: 1;
             transform: translateY(0);
         }
-        .service-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Tailwind: shadow-lg */
-        }
-        /* Estilos para el botón Volver Arriba */
-        #backToTopBtn {
-            display: none; /* Oculto por defecto */
-            position: fixed; /* Posición fija */
-            bottom: 20px; /* Abajo */
-            right: 30px; /* Derecha */
-            z-index: 99; /* Asegura que no se superponga */
-            border: none; /* Sin bordes */
-            outline: none; /* Sin contorno */
-            background-color: #4f46e5; /* Indigo-600 */
-            color: white; /* Color de texto */
-            cursor: pointer; /* Cursor de puntero al pasar el ratón */
-            padding: 15px; /* Relleno */
-            border-radius: 50%; /* Bordes redondeados */
-            font-size: 18px; /* Tamaño de fuente */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: background-color 0.3s, transform 0.3s;
-        }
-        #backToTopBtn:hover {
-            background-color: #4338ca; /* Indigo-700 */
-            transform: translateY(-2px);
-        }
 
-        /* Estilos específicos del carrusel principal */
-        .carousel-container {
-            position: relative;
-            width: 100%; /* Ocupa todo el ancho */
-            margin: 0 auto;
-            overflow: hidden;
-            border-radius: 0; /* Sin bordes redondeados si deseas borde completo */
+        .glass-effect {
+            background: rgba(15, 23, 42, 0.8); /* slate-900 with opacity */
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
-
-        .carousel-image {
-            width: 100%;
-            height: 400px; /* Puedes ajustar la altura según lo necesites */
-            object-fit: cover;
-            display: block;
+        
+        /* Drawer Styles */
+        .drawer-overlay {
+            transition: opacity 0.3s ease-in-out;
         }
-        .carousel-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            padding: 10px 15px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.5rem;
-            transition: background-color 0.3s;
-        }
-        .carousel-button:hover {
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-        .carousel-button.prev {
-            left: 10px;
-        }
-        .carousel-button.next {
-            right: 10px;
-        }
-
-        /* Animación para el texto del Hero */
-        .animate-fade-in-up {
-            animation: fadeInUp 1s ease-out forwards;
-        }
-        .animate-delay-500 {
-            animation-delay: 0.5s;
-        }
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Estilos para el carrusel de testimonios */
-        .testimonial-carousel {
-            position: relative;
-            overflow: hidden;
-            padding: 2rem 0;
-        }
-        .testimonial-wrapper {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-        .testimonial-card {
-            flex: 0 0 100%; /* Cada tarjeta ocupa el 100% del ancho */
-            padding: 2rem;
-            background-color: white;
-            border-radius: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            margin: 0 1rem; /* Espacio entre tarjetas, ajustado por el JS */
-        }
-        .testimonial-nav-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(79, 70, 229, 0.8); /* Indigo-600 semi-transparente */
-            color: white;
-            padding: 10px 15px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 1.5rem;
-            transition: background-color 0.3s;
-            z-index: 10;
-        }
-        .testimonial-nav-button:hover {
-            background-color: #4338ca; /* Indigo-700 */
-        }
-        .testimonial-nav-button.prev {
-            left: 10px;
-        }
-        .testimonial-nav-button.next {
-            right: 10px;
-        }
-
-        /* Animación para los contadores */
-        .counter-value {
-            font-size: 3rem;
-            font-weight: bold;
-            color: #4f46e5;
+        .drawer-menu {
+            transition: transform 0.3s ease-in-out;
         }
     </style>
 </head>
-<body>
+<body class="antialiased">
 
-    <!-- Header / Navbar -->
-    <header class="bg-white shadow-sm py-4 sticky top-0 z-50">
-        <nav class="container mx-auto flex justify-between items-center px-4">
-            <a href="#" class="text-2xl font-bold text-indigo-600 rounded-lg p-2 hover:bg-indigo-50 transition duration-300">
-                [Tu Empresa]
+    <!-- =========== HEADER / NAVIGATION =========== -->
+    <header id="header" class="fixed top-0 left-0 w-full z-50 transition-all duration-300">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-white">TuMarca</a>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#services" class="text-slate-300 hover:text-cyan-400 transition-colors duration-300">Servicios</a>
+                <a href="#portfolio" class="text-slate-300 hover:text-cyan-400 transition-colors duration-300">Portafolio</a>
+                <a href="#about" class="text-slate-300 hover:text-cyan-400 transition-colors duration-300">Nosotros</a>
+            </div>
+            <a href="#contact" class="hidden md:inline-block bg-cyan-500 text-slate-900 font-semibold px-5 py-2 rounded-lg hover:bg-cyan-400 hover:scale-105 transition-all duration-300 transform">
+                Contáctanos
             </a>
-            <ul class="flex space-x-6">
-                <li><a href="#inicio" class="text-slate-700 hover:text-indigo-600 font-medium transition duration-300 rounded-lg p-2 hover:bg-slate-100">Inicio</a></li>
-                <li><a href="#servicios" class="text-slate-700 hover:text-indigo-600 font-medium transition duration-300 rounded-lg p-2 hover:bg-slate-100">Servicios</a></li>
-                <li><a href="#logros" class="text-slate-700 hover:text-indigo-600 font-medium transition duration-300 rounded-lg p-2 hover:bg-slate-100">Logros</a></li>
-                <li><a href="#testimonios" class="text-slate-700 hover:text-indigo-600 font-medium transition duration-300 rounded-lg p-2 hover:bg-slate-100">Testimonios</a></li>
-                <li><a href="#nosotros" class="text-slate-700 hover:text-indigo-600 font-medium transition duration-300 rounded-lg p-2 hover:bg-slate-100">Sobre Nosotros</a></li>
-                <li><a href="#contacto" class="text-slate-700 hover:text-indigo-600 font-medium transition duration-300 rounded-lg p-2 hover:bg-slate-100">Contacto</a></li>
-            </ul>
+            <!-- Botón para abrir el drawer en móviles -->
+            <button id="drawer-open-button" class="md:hidden text-white text-2xl">
+                <i class="fas fa-bars"></i>
+            </button>
         </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section id="inicio" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-20 px-4 rounded-b-lg shadow-md">
-        <div class="container mx-auto text-center">
-            <h1 class="text-5xl font-extrabold mb-4 leading-tight animate-fade-in-up">Soluciones Innovadoras para tu Negocio</h1>
-            <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90 animate-fade-in-up animate-delay-500">
-                Ofrecemos una amplia gama de servicios diseñados para impulsar tu éxito y transformar tus ideas en realidad.
-            </p>
+    <!-- =========== DRAWER MENU (MOBILE) =========== -->
+    <div id="drawer-container" class="fixed inset-0 z-[999] invisible">
+        <!-- Overlay -->
+        <div id="drawer-overlay" class="absolute inset-0 bg-black/60 opacity-0 drawer-overlay"></div>
+        
+        <!-- Menu Panel -->
+        <div id="drawer-menu" class="absolute top-0 right-0 h-full w-4/5 max-w-sm bg-slate-800 p-6 transform translate-x-full drawer-menu">
+            <div class="flex justify-between items-center mb-10">
+                <span class="text-xl font-bold text-white">Menú</span>
+                <button id="drawer-close-button" class="text-slate-300 hover:text-white text-2xl">&times;</button>
             </div>
-            <!-- Carousel Container -->
-            <div class="carousel-container mt-10">
-                <img id="carouselImage" src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="carousel-image">
-                <button class="carousel-button prev" onclick="changeSlide(-1)">&#10094;</button>
-                <button class="carousel-button next" onclick="changeSlide(1)">&#10095;</button>
-            </div>
-            <a href="#servicios" class="bg-white text-indigo-700 hover:bg-indigo-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 inline-block mt-8">
-                Explora Nuestros Servicios
-            </a>
+            <nav class="flex flex-col space-y-4">
+                <a href="#services" class="text-slate-300 hover:bg-slate-700 p-3 rounded-md">Servicios</a>
+                <a href="#portfolio" class="text-slate-300 hover:bg-slate-700 p-3 rounded-md">Portafolio</a>
+                <a href="#about" class="text-slate-300 hover:bg-slate-700 p-3 rounded-md">Nosotros</a>
+                <a href="#contact" class="mt-4 text-center bg-cyan-600 text-white hover:bg-cyan-500 p-3 rounded-md">Contáctanos</a>
+            </nav>
         </div>
-    </section>
+    </div>
 
-    <!-- Services Section -->
-    <section id="servicios" class="py-16 px-4">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold text-center text-slate-800 mb-12">Nuestros Servicios Destacados</h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Service Card 1: Desarrollo Web -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://images.unsplash.com/photo-1542831371-d38ad6445585?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <h3 class="text-2xl font-semibold text-slate-800 mb-2">Desarrollo Web Personalizado</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
-                        Creamos sitios web modernos, responsivos y optimizados para ofrecer la mejor experiencia de usuario y alcanzar tus objetivos.
-                    </p>
-                    <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service1-full-desc">Leer Más</button>
-                    <p id="service1-full-desc" class="text-slate-600 mt-4 hidden">
-                        Desde páginas informativas hasta complejas aplicaciones web, utilizamos las últimas tecnologías para garantizar un rendimiento excepcional y una seguridad robusta. Nos enfocamos en la usabilidad y el diseño atractivo para que tu presencia online destaque.
-                    </p>
-                </div>
-
-                <!-- Service Card 2: Marketing Digital -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://images.unsplash.com/photo-1557426716-a3297a731e8c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <h3 class="text-2xl font-semibold text-slate-800 mb-2">Marketing Digital Estratégico</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
-                        Aumenta tu visibilidad online y atrae a más clientes con nuestras estrategias de SEO, SEM, redes sociales y marketing de contenidos.
-                    </p>
-                    <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service2-full-desc">Leer Más</button>
-                    <p id="service2-full-desc" class="text-slate-600 mt-4 hidden">
-                        Desarrollamos campañas personalizadas que se adaptan a tu público objetivo, optimizando el retorno de inversión y construyendo una marca fuerte en el entorno digital. Analizamos datos para refinar constantemente nuestras tácticas.
-                    </p>
-                </div>
-
-                <!-- Service Card 3: Diseño Gráfico -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://images.unsplash.com/photo-1581291518857-4e27b48ff7ad?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <h3 class="text-2xl font-semibold text-slate-800 mb-2">Diseño Gráfico Creativo</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
-                        Desde logotipos impactantes hasta materiales de marketing, nuestro equipo de diseño dará vida a tu visión con creatividad y profesionalismo.
-                    </p>
-                    <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service3-full-desc">Leer Más</button>
-                    <p id="service3-full-desc" class="text-slate-600 mt-4 hidden">
-                        Ofrecemos diseño de identidad corporativa, folletos, banners, infografías y mucho más. Nos aseguramos de que cada pieza comunique eficazmente tu mensaje y refuerce la imagen de tu marca.
-                    </p>
-                </div>
-
-                <!-- Service Card 4: Consultoría TI -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://images.unsplash.com/photo-1556761175-5974ddf47b59?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <h3 class="text-2xl font-semibold text-slate-800 mb-2">Consultoría y Soporte TI</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
-                        Brindamos asesoramiento experto y soporte técnico para optimizar tu infraestructura tecnológica y resolver cualquier desafío.
-                    </p>
-                    <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service4-full-desc">Leer Más</button>
-                    <p id="service4-full-desc" class="text-slate-600 mt-4 hidden">
-                        Nuestros consultores te ayudarán a implementar soluciones eficientes, mejorar la seguridad de tus sistemas y capacitar a tu equipo para maximizar el uso de la tecnología. Estamos aquí para asegurar la continuidad de tus operaciones.
-                    </p>
-                </div>
-
-                <!-- Service Card 5: Creación de Contenido Digital -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://images.unsplash.com/photo-1497032628184-d5336024f2b1?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <h3 class="text-2xl font-semibold text-slate-800 mb-2">Creación de Contenido Digital</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
-                        Desarrollamos contenido atractivo y relevante para tu audiencia, desde artículos de blog hasta videos y podcasts.
-                    </p>
-                    <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service5-full-desc">Leer Más</button>
-                    <p id="service5-full-desc" class="text-slate-600 mt-4 hidden">
-                        Nuestro equipo de redactores y creadores multimedia produce contenido de alta calidad que no solo informa y entretiene, sino que también posiciona tu marca como líder en tu industria.
-                    </p>
-                </div>
-
-                <!-- Service Card 6: Soluciones de E-commerce -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://images.unsplash.com/photo-1563013544-824ae1b7edfd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
-                    <h3 class="text-2xl font-semibold text-slate-800 mb-2">Soluciones de E-commerce</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
-                        Diseñamos y desarrollamos tiendas online robustas y seguras, optimizadas para maximizar tus ventas y la experiencia del cliente.
-                    </p>
-                    <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service6-full-desc">Leer Más</button>
-                    <p id="service6-full-desc" class="text-slate-600 mt-4 hidden">
-                        Desde la selección de la plataforma adecuada hasta la integración de pasarelas de pago y la gestión de inventario, te acompañamos en cada paso para lanzar y escalar tu negocio online.
-                    </p>
-                </div>
+    <main>
+        <!-- =========== HERO SECTION =========== -->
+        <section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
+            <div class="absolute inset-0 bg-slate-900 opacity-50"></div>
+            <div class="absolute inset-0 z-0">
+                 <div class="absolute bottom-0 left-[-20%] right-[-20%] top-[-20%] bg-[radial-gradient(circle_500px_at_50%_200px,#0ea5e9,transparent)]"></div>
             </div>
-        </div>
-    </section>
-
-    <!-- Our Achievements Section (New) -->
-    <section id="logros" class="bg-gradient-to-r from-purple-600 to-indigo-500 text-white py-16 px-4 rounded-lg shadow-md">
-        <div class="container mx-auto text-center">
-            <h2 class="text-4xl font-bold mb-12">Nuestros Logros</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="p-6 rounded-xl bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm shadow-lg">
-                    <div class="counter-value" data-target="500">+0</div>
-                    <p class="text-xl font-semibold mt-2">Proyectos Completados</p>
-                </div>
-                <div class="p-6 rounded-xl bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm shadow-lg">
-                    <div class="counter-value" data-target="200">+0</div>
-                    <p class="text-xl font-semibold mt-2">Clientes Satisfechos</p>
-                </div>
-                <div class="p-6 rounded-xl bg-white bg-opacity-20 backdrop-filter backdrop-blur-sm shadow-lg">
-                    <div class="counter-value" data-target="10000">+0</div>
-                    <p class="text-xl font-semibold mt-2">Horas de Desarrollo</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section (New) -->
-    <section id="testimonios" class="py-16 px-4 bg-slate-100">
-        <div class="container mx-auto text-center">
-            <h2 class="text-4xl font-bold text-slate-800 mb-12">Lo que Dicen Nuestros Clientes</h2>
-            <div class="testimonial-carousel relative">
-                <div class="testimonial-wrapper" id="testimonialWrapper">
-                    <!-- Testimonial 1 -->
-                    <div class="testimonial-card">
-                        <p class="text-slate-700 text-lg italic mb-4">
-                            "¡Increíble servicio! [Tu Empresa] transformó nuestra presencia online. El equipo es muy profesional y los resultados superaron nuestras expectativas."
-                        </p>
-                        <p class="font-semibold text-indigo-600">- Ana López, CEO de InnovaTech</p>
-                    </div>
-                    <!-- Testimonial 2 -->
-                    <div class="testimonial-card">
-                        <p class="text-slate-700 text-lg italic mb-4">
-                            "Trabajar con ellos fue una experiencia fantástica. Su estrategia de marketing digital nos ayudó a alcanzar nuevos mercados y aumentar nuestras ventas significativamente."
-                        </p>
-                        <p class="font-semibold text-indigo-600">- Juan Pérez, Director de Marketing de Global Solutions</p>
-                    </div>
-                    <!-- Testimonial 3 -->
-                    <div class="testimonial-card">
-                        <p class="text-slate-700 text-lg italic mb-4">
-                            "El diseño de nuestro nuevo logotipo es espectacular. Capturaron perfectamente la esencia de nuestra marca. ¡Altamente recomendados!"
-                        </p>
-                        <p class="font-semibold text-indigo-600">- María García, Fundadora de Creativa Estudio</p>
-                    </div>
-                </div>
-                <button class="testimonial-nav-button prev" onclick="changeTestimonial(-1)">&#10094;</button>
-                <button class="testimonial-nav-button next" onclick="changeTestimonial(1)">&#10095;</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Us Section -->
-    <section id="nosotros" class="bg-white py-16 px-4 rounded-lg shadow-md">
-        <div class="container mx-auto text-center">
-            <h2 class="text-4xl font-bold text-slate-800 mb-8">Sobre Nosotros</h2>
-            <div class="max-w-3xl mx-auto text-slate-700 text-lg leading-relaxed">
-                <p class="mb-4">
-                    En <span class="font-semibold text-indigo-600">[Tu Empresa]</span>, somos un equipo apasionado de profesionales dedicados a ofrecer soluciones digitales de alta calidad. Con años de experiencia en la industria, nos enorgullece construir relaciones duraderas con nuestros clientes, basadas en la confianza, la transparencia y los resultados.
+            <div class="container mx-auto px-6 z-10">
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-white mb-4 reveal-on-scroll">
+                    Soluciones Digitales que <span class="text-cyan-400">Inspiran</span>
+                </h1>
+                <p class="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto mb-8 reveal-on-scroll" style="transition-delay: 200ms;">
+                    Transformamos ideas en experiencias web impactantes. Diseño, desarrollo y estrategia para llevar tu negocio al siguiente nivel.
                 </p>
-                <p>
-                    Nuestra misión es empoderar a empresas de todos los tamaños para que alcancen su máximo potencial en el mundo digital. Creemos en la innovación constante y en la adaptación a las nuevas tendencias para asegurar que nuestros clientes siempre estén un paso adelante.
-                </p>
+                <a href="#services" class="bg-cyan-500 text-slate-900 font-bold text-lg px-8 py-4 rounded-lg hover:bg-cyan-400 hover:scale-105 transition-all duration-300 transform inline-block reveal-on-scroll" style="transition-delay: 400ms;">
+                    Explora Nuestros Servicios
+                </a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Contact Section -->
-    <section id="contacto" class="py-16 px-4">
-        <div class="container mx-auto">
-            <h2 class="text-4xl font-bold text-center text-slate-800 mb-12">Contáctanos</h2>
-
-            <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-md">
-                <p class="text-slate-600 text-center mb-6">¿Tienes un proyecto en mente o alguna pregunta? ¡Nos encantaría escucharte!</p>
-                <form id="contactForm" class="space-y-6">
-                    <div>
-                        <label for="name" class="block text-slate-700 text-sm font-bold mb-2">Nombre Completo</label>
-                        <input type="text" id="name" name="name" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Tu Nombre" required>
+        <!-- =========== SERVICES SECTION =========== -->
+        <section id="services" class="py-20 lg:py-32 bg-slate-800/50">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl lg:text-4xl font-bold text-white reveal-on-scroll">Lo que Hacemos por Ti</h2>
+                    <p class="text-slate-400 mt-4 max-w-2xl mx-auto reveal-on-scroll" style="transition-delay: 150ms;">Ofrecemos un abanico de servicios diseñados para potenciar tu presencia online.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Service Card 1 -->
+                    <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300 reveal-on-scroll">
+                        <div class="text-cyan-400 text-4xl mb-6">
+                            <i class="fas fa-palette"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-white mb-3">Diseño Web UI/UX</h3>
+                        <p class="text-slate-400">
+                            Creamos interfaces visualmente atractivas e intuitivas que garantizan una experiencia de usuario inolvidable.
+                        </p>
                     </div>
-                    <div>
-                        <label for="email" class="block text-slate-700 text-sm font-bold mb-2">Correo Electrónico</label>
-                        <input type="email" id="email" name="email" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="tu.email@ejemplo.com" required>
+                    <!-- Service Card 2 -->
+                    <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300 reveal-on-scroll" style="transition-delay: 200ms;">
+                        <div class="text-cyan-400 text-4xl mb-6">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-white mb-3">Desarrollo Web</h3>
+                        <p class="text-slate-400">
+                            Construimos sitios web rápidos, seguros y escalables utilizando las tecnologías más modernas del mercado.
+                        </p>
                     </div>
-                    <div>
-                        <label for="message" class="block text-slate-700 text-sm font-bold mb-2">Tu Mensaje</label>
-                        <textarea id="message" name="message" rows="6" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Describe tu proyecto o pregunta aquí..." required></textarea>
+                    <!-- Service Card 3 -->
+                    <div class="bg-slate-800 p-8 rounded-xl border border-slate-700 hover:-translate-y-2 hover:shadow-2xl hover:shadow-cyan-500/10 transition-all duration-300 reveal-on-scroll" style="transition-delay: 400ms;">
+                        <div class="text-cyan-400 text-4xl mb-6">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-white mb-3">Optimización SEO</h3>
+                        <p class="text-slate-400">
+                            Posicionamos tu web en los primeros lugares de Google para que tus clientes potenciales te encuentren fácilmente.
+                        </p>
                     </div>
-                    <div class="text-center">
-                        <button type="submit" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-full hover:bg-indigo-700 transition duration-300 transform hover:scale-105 shadow-lg">
-                            Enviar Mensaje
-                        </button>
-                    </div>
-                </form>
-                <div id="formMessage" class="mt-6 p-4 rounded-lg text-center hidden" role="alert"></div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer class="bg-slate-800 text-white py-8 px-4 rounded-t-lg shadow-inner">
-        <div class="container mx-auto text-center text-sm">
-            <p>&copy; 2025 [Tu Empresa]. Todos los derechos reservados.</p>
-            <p class="mt-2">
-                <a href="#" class="text-indigo-400 hover:text-indigo-300 transition duration-300">Política de Privacidad</a> |
-                <a href="#" class="text-indigo-400 hover:text-indigo-300 transition duration-300">Términos de Servicio</a>
-            </p>
+        <!-- =========== PORTFOLIO SECTION =========== -->
+        <section id="portfolio" class="py-20 lg:py-32">
+            <div class="container mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl lg:text-4xl font-bold text-white reveal-on-scroll">Nuestro Trabajo Reciente</h2>
+                    <p class="text-slate-400 mt-4 max-w-2xl mx-auto reveal-on-scroll" style="transition-delay: 150ms;">Un vistazo a algunos de los proyectos que hemos entregado con orgullo.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Portfolio Item 1 -->
+                    <div class="group relative overflow-hidden rounded-lg reveal-on-scroll">
+                        <img src="https://placehold.co/600x400/0f172a/0ea5e9?text=Proyecto+Alfa" alt="Imagen del Proyecto Alfa" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-6">
+                            <h3 class="text-xl font-bold text-white">E-commerce Innovador</h3>
+                            <p class="text-cyan-300 text-sm">Desarrollo y Diseño</p>
+                        </div>
+                    </div>
+                    <!-- Portfolio Item 2 -->
+                    <div class="group relative overflow-hidden rounded-lg reveal-on-scroll" style="transition-delay: 200ms;">
+                        <img src="https://placehold.co/600x400/0f172a/f472b6?text=Proyecto+Beta" alt="Imagen del Proyecto Beta" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-6">
+                            <h3 class="text-xl font-bold text-white">Web Corporativa</h3>
+                            <p class="text-pink-300 text-sm">Branding y UI/UX</p>
+                        </div>
+                    </div>
+                    <!-- Portfolio Item 3 -->
+                    <div class="group relative overflow-hidden rounded-lg reveal-on-scroll" style="transition-delay: 400ms;">
+                        <img src="https://placehold.co/600x400/0f172a/a78bfa?text=Proyecto+Gamma" alt="Imagen del Proyecto Gamma" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                        <div class="absolute bottom-0 left-0 p-6">
+                            <h3 class="text-xl font-bold text-white">Landing Page</h3>
+                            <p class="text-purple-300 text-sm">Marketing Digital</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =========== ABOUT US SECTION =========== -->
+        <section id="about" class="py-20 lg:py-32 bg-slate-800/50">
+            <div class="container mx-auto px-6">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div class="reveal-on-scroll">
+                        <img src="https://placehold.co/600x600/1e293b/ffffff?text=Nuestro+Equipo" alt="Imagen de nuestro equipo" class="rounded-xl shadow-2xl w-full">
+                    </div>
+                    <div class="reveal-on-scroll" style="transition-delay: 200ms;">
+                        <h2 class="text-3xl lg:text-4xl font-bold text-white mb-6">Apasionados por la Tecnología y el Diseño</h2>
+                        <p class="text-slate-400 mb-4">
+                            Somos un equipo de creativos, desarrolladores y estrategas con una misión en común: construir productos digitales excepcionales. Creemos en la colaboración, la transparencia y en superar las expectativas en cada proyecto.
+                        </p>
+                        <p class="text-slate-400 mb-8">
+                            Nuestra experiencia combinada nos permite abordar desafíos complejos y entregar soluciones robustas y elegantes que generan resultados medibles para nuestros clientes.
+                        </p>
+                        <a href="#contact" class="bg-transparent border-2 border-cyan-500 text-cyan-500 font-semibold px-6 py-3 rounded-lg hover:bg-cyan-500 hover:text-slate-900 transition-all duration-300">
+                            Hablemos de tu idea
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- =========== FOOTER =========== -->
+    <footer id="contact" class="bg-slate-900 border-t border-slate-800">
+        <div class="container mx-auto px-6 py-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-white">¿Listo para Empezar?</h2>
+                <p class="text-slate-400 mt-3">Ponte en contacto con nosotros y demos vida a tu proyecto.</p>
+                <a href="mailto:hola@tumarca.com" class="text-cyan-400 text-xl mt-4 inline-block hover:text-white transition">hola@tumarca.com</a>
+            </div>
+            <div class="flex justify-center space-x-6 mt-8">
+                <a href="#" class="text-slate-400 hover:text-cyan-400 text-2xl transition-colors"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="text-slate-400 hover:text-cyan-400 text-2xl transition-colors"><i class="fab fa-github"></i></a>
+                <a href="#" class="text-slate-400 hover:text-cyan-400 text-2xl transition-colors"><i class="fab fa-linkedin-in"></i></a>
+            </div>
+            <div class="text-center text-slate-500 mt-12 border-t border-slate-800 pt-8">
+                <p>&copy; <span id="year"></span> TuMarca. Todos los derechos reservados.</p>
+            </div>
         </div>
     </footer>
 
-    <!-- Back to Top Button -->
-    <button onclick="topFunction()" id="backToTopBtn" title="Volver Arriba">&#9650;</button>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Desplazamiento suave para los enlaces de navegación
-            document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                });
-            });
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.getElementById('header');
+            
+            // --- DRAWER MENU LOGIC ---
+            const drawerContainer = document.getElementById('drawer-container');
+            const drawerOverlay = document.getElementById('drawer-overlay');
+            const drawerMenu = document.getElementById('drawer-menu');
+            const openButton = document.getElementById('drawer-open-button');
+            const closeButton = document.getElementById('drawer-close-button');
+            const drawerLinks = drawerMenu.querySelectorAll('a');
 
-            // Manejo del envío del formulario de contacto
-            const contactForm = document.getElementById('contactForm');
-            const formMessage = document.getElementById('formMessage');
+            const openDrawer = () => {
+                drawerContainer.classList.remove('invisible');
+                drawerOverlay.classList.remove('opacity-0');
+                drawerMenu.classList.remove('translate-x-full');
+                document.body.style.overflow = 'hidden'; // Prevent background scrolling
+            };
 
-            contactForm.addEventListener('submit', function(e) {
-                e.preventDefault(); // Previene el envío por defecto del formulario
-
-                const name = document.getElementById('name').value;
-                const email = document.getElementById('email').value;
-                const message = document.getElementById('message').value;
-
-                // Solo para demostración, se registran los datos y se muestra un mensaje de éxito.
-                // En una aplicación real, estos datos se enviarían a un servidor.
-                console.log('Formulario Enviado:');
-                console.log('Nombre:', name);
-                console.log('Email:', email);
-                console.log('Mensaje:', message);
-
-                formMessage.classList.remove('hidden');
-                formMessage.classList.remove('bg-red-100', 'text-red-700');
-                formMessage.classList.add('bg-green-100', 'text-green-700');
-                formMessage.innerHTML = '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.';
-
-                contactForm.reset(); // Limpia el formulario
-
-                // Oculta el mensaje después de 5 segundos
+            const closeDrawer = () => {
+                drawerOverlay.classList.add('opacity-0');
+                drawerMenu.classList.add('translate-x-full');
                 setTimeout(() => {
-                    formMessage.classList.add('hidden');
-                }, 5000);
+                    drawerContainer.classList.add('invisible');
+                    document.body.style.overflow = ''; // Restore scrolling
+                }, 300); // Wait for transition to finish
+            };
+
+            openButton.addEventListener('click', openDrawer);
+            closeButton.addEventListener('click', closeDrawer);
+            drawerOverlay.addEventListener('click', closeDrawer);
+            drawerLinks.forEach(link => {
+                link.addEventListener('click', closeDrawer);
             });
 
-            // Funcionalidad "Leer Más" para las tarjetas de servicio
-            document.querySelectorAll('.read-more-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const targetId = this.dataset.target;
-                    const fullDesc = document.getElementById(targetId);
 
-                    if (fullDesc.classList.contains('hidden')) {
-                        fullDesc.classList.remove('hidden');
-                        this.textContent = 'Leer Menos';
-                    } else {
-                        fullDesc.classList.add('hidden');
-                        this.textContent = 'Leer Más';
-                    }
-                });
-            });
-
-            // Funcionalidad del botón Volver Arriba
-            const backToTopBtn = document.getElementById("backToTopBtn");
-
-            // Cuando el usuario se desplaza 20px hacia abajo desde la parte superior del documento, muestra el botón
-            window.onscroll = function() {
-                if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-                    backToTopBtn.style.display = "block";
+            // --- HEADER SCROLL EFFECT ---
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    header.classList.add('glass-effect', 'shadow-lg');
                 } else {
-                    backToTopBtn.style.display = "none";
+                    header.classList.remove('glass-effect', 'shadow-lg');
                 }
-            };
- 
-            // Cuando el usuario hace clic en el botón, se desplaza a la parte superior del documento
-            window.topFunction = function() {
-                document.body.scrollTop = 0; // Para Safari
-                document.documentElement.scrollTop = 0; // Para Chrome, Firefox, IE y Opera
-            }
-
-            // Funcionalidad del carrusel de imágenes principal
-            const carouselImages = [
-                "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Colaboración en equipo
-                "https://images.unsplash.com/photo-1557804506-669a67965ba0?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Tecnología abstracta
-                "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"  // Personas trabajando
-            ];
-            let currentSlide = 0;
-            const carouselImageElement = document.getElementById('carouselImage');
-
-            function showSlide(index) {
-                carouselImageElement.src = carouselImages[index];
-            }
-
-            window.changeSlide = function(n) {
-                currentSlide += n;
-                if (currentSlide >= carouselImages.length) {
-                    currentSlide = 0;
-                }
-                if (currentSlide < 0) {
-                    currentSlide = carouselImages.length - 1;
-                }
-                showSlide(currentSlide);
-            };
-
-            // Avance automático del carrusel
-            let carouselInterval = setInterval(() => {
-                changeSlide(1);
-            }, 5000); // Cambia la imagen cada 5 segundos
-
-            // Pausar carrusel al pasar el ratón (buena UX)
-            carouselImageElement.parentElement.addEventListener('mouseenter', () => {
-                clearInterval(carouselInterval);
-            });
-            carouselImageElement.parentElement.addEventListener('mouseleave', () => {
-                carouselInterval = setInterval(() => {
-                    changeSlide(1);
-                }, 5000);
             });
 
-            // Animación al hacer scroll para las tarjetas de servicio
-            const serviceCards = document.querySelectorAll('.service-card');
-
-            const observerOptions = {
-                root: null, // viewport
-                rootMargin: '0px',
-                threshold: 0.2 // el 20% del elemento debe ser visible
-            };
-
-            const observer = new IntersectionObserver((entries, observer) => {
+            // --- SCROLL REVEAL ANIMATION ---
+            const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('fade-in');
-                        observer.unobserve(entry.target); // Deja de observar una vez animado
+                        entry.target.classList.add('is-visible');
                     }
                 });
-            }, observerOptions);
-
-            serviceCards.forEach(card => {
-                observer.observe(card);
+            }, {
+                threshold: 0.1
             });
 
-            // Funcionalidad del carrusel de testimonios
-            const testimonialWrapper = document.getElementById('testimonialWrapper');
-            const testimonialCards = document.querySelectorAll('.testimonial-card');
-            let currentTestimonial = 0;
-
-            function updateTestimonialCarousel() {
-                const cardWidth = testimonialCards[0].offsetWidth + 32; // Ancho de la tarjeta + margin-right (2rem = 32px)
-                testimonialWrapper.style.transform = `translateX(-${currentTestimonial * cardWidth}px)`;
-            }
-
-            window.changeTestimonial = function(n) {
-                currentTestimonial += n;
-                if (currentTestimonial >= testimonialCards.length) {
-                    currentTestimonial = 0;
-                }
-                if (currentTestimonial < 0) {
-                    currentTestimonial = testimonialCards.length - 1;
-                }
-                updateTestimonialCarousel();
-            };
-
-            // Asegurar que el carrusel de testimonios se ajuste al redimensionar
-            window.addEventListener('resize', updateTestimonialCarousel);
-            updateTestimonialCarousel(); // Llamada inicial para posicionar correctamente
-
-            // Contadores Animados
-            const counters = document.querySelectorAll('.counter-value');
-            const counterObserverOptions = {
-                root: null,
-                rootMargin: '0px',
-                threshold: 0.5 // Cuando el 50% del contador es visible
-            };
-
-            const animateCounter = (entry) => {
-                if (entry.isIntersecting) {
-                    const counter = entry.target;
-                    const target = parseInt(counter.dataset.target);
-                    let count = 0;
-                    const increment = target / 100; // Ajustar la velocidad de la animación
-
-                    const updateCount = () => {
-                        if (count < target) {
-                            count += increment;
-                            counter.textContent = '+' + Math.ceil(count);
-                            requestAnimationFrame(updateCount);
-                        } else {
-                            counter.textContent = '+' + target;
-                        }
-                    };
-                    updateCount();
-                    counterObserver.unobserve(counter); // Deja de observar una vez animado
-                }
-            };
-
-            const counterObserver = new IntersectionObserver((entries) => {
-                entries.forEach(animateCounter);
-            }, counterObserverOptions);
-
-            counters.forEach(counter => {
-                counterObserver.observe(counter);
+            const elementsToReveal = document.querySelectorAll('.reveal-on-scroll');
+            elementsToReveal.forEach(el => {
+                observer.observe(el);
             });
+            
+            // --- SET CURRENT YEAR IN FOOTER ---
+            document.getElementById('year').textContent = new Date().getFullYear();
         });
     </script>
+
 </body>
 </html>
