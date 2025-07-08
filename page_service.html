@@ -7,16 +7,49 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
-        body {
+        html, body {
+            overflow-x: hidden; /* Prevent horizontal scrolling */
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* Tailwind: bg-slate-50 */
-            color: #334155; /* Tailwind: text-slate-700 */
+            background-color: #f9fafb; /* Tailwind: bg-gray-50 */
+            color: #1e293b; /* Tailwind: text-slate-800 for better contrast */
         }
         .container {
             max-width: 1200px;
         }
+        /* General section animation */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .animate-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero text animation */
+        .hero-text-animate {
+            animation: fadeInSlideUp 1.2s ease-out forwards;
+        }
+        .hero-text-animate.delay-1 { animation-delay: 0.3s; }
+        .hero-text-animate.delay-2 { animation-delay: 0.6s; }
+        .hero-text-animate.delay-3 { animation-delay: 0.9s; }
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Service item hover effect */
         .service-card {
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
         }
@@ -24,49 +57,187 @@
             transform: translateY(-5px);
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* Tailwind: shadow-lg */
         }
+
+        /* Drawer Menu Styles */
+        .drawer-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 80%; /* Adjust as needed, e.g., 80% of screen width */
+            max-width: 300px; /* Max width for larger mobiles/small tablets */
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.2); /* Transparent white */
+            backdrop-filter: blur(10px); /* Blurred background */
+            -webkit-backdrop-filter: blur(10px); /* For Safari */
+            transform: translateX(100%); /* Start off-screen to the right */
+            transition: transform 0.4s ease-out;
+            z-index: 90; /* Below cart modal, above main content */
+            padding: 2rem;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .drawer-menu.open {
+            transform: translateX(0); /* Slide in */
+        }
+        .drawer-close-btn {
+            align-self: flex-end; /* Push to top right of drawer */
+            font-size: 2.5rem;
+            color: #4f46e5; /* Indigo-600 */
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            transition: color 0.3s;
+        }
+        .drawer-close-btn:hover {
+            color: #4338ca; /* Indigo-700 */
+        }
+        .drawer-nav-links a {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 0;
+            color: #1e293b; /* Slate-800 */
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: left;
+            transition: color 0.3s, background-color 0.3s;
+            border-radius: 0.5rem;
+        }
+        .drawer-nav-links a:hover {
+            color: #4f46e5; /* Indigo-600 */
+            background-color: rgba(79, 70, 229, 0.1); /* Light indigo for hover */
+        }
+
+        /* Hamburger Icon */
+        .hamburger-icon {
+            font-size: 2rem;
+            color: #ffffff; /* White */
+            cursor: pointer;
+            display: block; /* Show by default on small screens */
+        }
+
+        /* Hide regular nav links and show hamburger on small screens */
+        @media (max-width: 767px) { /* Tailwind's 'md' breakpoint is 768px */
+            .header-nav-links {
+                display: none;
+            }
+            .hamburger-icon {
+                display: block;
+            }
+        }
+
+        /* Hide hamburger and show regular nav links on medium and larger screens */
+        @media (min-width: 768px) {
+            .header-nav-links {
+                display: flex !important; /* Override flex-col from above */
+                flex-direction: row !important;
+                space-x: 1.5rem; /* Tailwind's space-x-6 */
+            }
+            .hamburger-icon {
+                display: none;
+            }
+        }
+
+        /* Responsive adjustments for text sizes and padding */
+        @media (max-width: 640px) { /* Small screens (sm) */
+            .hero-text-animate {
+                font-size: 2.5rem; /* text-4xl */
+            }
+            .hero-text-animate.delay-1 {
+                font-size: 1rem; /* text-base */
+            }
+            .service-card h3 {
+                font-size: 1.5rem; /* text-xl */
+            }
+            .service-card p {
+                font-size: 0.875rem; /* text-sm */
+            }
+            .read-more-btn {
+                padding: 0.5rem 1rem; /* py-2 px-4 */
+                font-size: 0.75rem; /* text-xs */
+            }
+            .contact-form-container {
+                padding: 1.5rem; /* p-6 */
+            }
+            .contact-form-container label {
+                font-size: 0.875rem; /* text-sm */
+            }
+            .contact-form-container input,
+            .contact-form-container textarea {
+                padding: 0.625rem 1rem; /* py-2.5 px-4 */
+                font-size: 0.875rem; /* text-sm */
+            }
+            .contact-form-container button {
+                padding: 0.75rem 1.5rem; /* py-3 px-6 */
+                font-size: 0.875rem; /* text-sm */
+            }
+        }
+        /* Ensure images are always responsive */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
     </style>
 </head>
 <body>
 
     <!-- Header / Navbar -->
-    <header class="bg-white shadow-sm py-4">
+    <header class="bg-indigo-700 shadow-xl py-4 sticky top-0 z-50">
         <nav class="container mx-auto flex justify-between items-center px-4">
-            <a href="#" class="text-2xl font-bold text-indigo-600 rounded-lg p-2 hover:bg-indigo-50 transition duration-300">
+            <a href="#" class="text-3xl font-extrabold text-white rounded-lg p-2 hover:bg-indigo-800 transition duration-300">
                 [Tu Empresa]
             </a>
-            <ul class="flex space-x-6">
-                <li><a href="#inicio" class="text-slate-700 hover:text-indigo-600 font-medium transition duration-300 rounded-lg p-2 hover:bg-slate-100">Inicio</a></li>
-                <li><a href="#servicios" class="text-slate-700 hover:text-indigo-600 font-medium transition duration-300 rounded-lg p-2 hover:bg-slate-100">Servicios</a></li>
-                <li><a href="#nosotros" class="text-slate-700 hover:text-indigo-600 font-medium transition duration-300 rounded-lg p-2 hover:bg-slate-100">Sobre Nosotros</a></li>
-                <li><a href="#contacto" class="text-slate-700 hover:text-indigo-600 font-medium transition duration-300 rounded-lg p-2 hover:bg-slate-100">Contacto</a></li>
+            
+            <!-- Hamburger Icon for Mobile -->
+            <button id="hamburgerBtn" class="hamburger-icon md:hidden">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Regular Navigation Links (Hidden on Mobile, shown on MD+) -->
+            <ul class="header-nav-links hidden md:flex md:space-x-6 items-center">
+                <li><a href="#inicio" class="text-white hover:text-indigo-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-indigo-800">Inicio</a></li>
+                <li><a href="#servicios" class="text-white hover:text-indigo-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-indigo-800">Servicios</a></li>
+                <li><a href="#nosotros" class="text-white hover:text-indigo-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-indigo-800">Sobre Nosotros</a></li>
+                <li><a href="#contacto" class="text-white hover:text-indigo-300 font-medium transition duration-300 rounded-lg p-2 hover:bg-indigo-800">Contacto</a></li>
             </ul>
         </nav>
     </header>
 
+    <!-- Mobile Drawer Menu -->
+    <div id="mobileDrawer" class="drawer-menu">
+        <button id="drawerCloseBtn" class="drawer-close-btn">&times;</button>
+        <div class="drawer-nav-links w-full">
+            <a href="#inicio">Inicio</a>
+            <a href="#servicios">Servicios</a>
+            <a href="#nosotros">Sobre Nosotros</a>
+            <a href="#contacto">Contacto</a>
+        </div>
+    </div>
+
     <!-- Hero Section -->
-    <section id="inicio" class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white py-20 px-4 rounded-b-lg shadow-md">
+    <section id="inicio" class="bg-gradient-to-r from-indigo-600 to-purple-700 text-white py-20 px-4 rounded-b-lg shadow-md">
         <div class="container mx-auto text-center">
-            <h1 class="text-5xl font-extrabold mb-4 leading-tight">Soluciones Innovadoras para tu Negocio</h1>
-            <p class="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4 leading-tight hero-text-animate">Soluciones Innovadoras para tu Negocio</h1>
+            <p class="text-lg md:text-xl mb-8 max-w-2xl mx-auto opacity-90 hero-text-animate delay-1">
                 Ofrecemos una amplia gama de servicios diseñados para impulsar tu éxito y transformar tus ideas en realidad.
             </p>
-            <a href="#servicios" class="bg-white text-indigo-700 hover:bg-indigo-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+            <a href="#servicios" class="bg-white text-indigo-700 hover:bg-indigo-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 transform hover:scale-105 hero-text-animate delay-2">
                 Explora Nuestros Servicios
             </a>
         </div>
     </section>
 
     <!-- Services Section -->
-    <section id="servicios" class="py-16 px-4">
+    <section id="servicios" class="py-16 px-4 bg-white animate-on-scroll">
         <div class="container mx-auto">
-            <h2 class="text-4xl font-bold text-center text-slate-800 mb-12">Nuestros Servicios Destacados</h2>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-center text-indigo-800 mb-12">Nuestros Servicios Destacados</h2>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Service Card 1 -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://placehold.co/300x200/a78bfa/ffffff?text=Desarrollo+Web" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Service Card 1: Desarrollo Web Personalizado -->
+                <div class="service-card bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden p-6 flex flex-col items-center text-center">
+                    <img src="https://placehold.co/300x200/4f46e5/ffffff?text=Desarrollo+Web" alt="Desarrollo Web" class="w-full h-48 object-cover rounded-lg mb-4">
                     <h3 class="text-2xl font-semibold text-slate-800 mb-2">Desarrollo Web Personalizado</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         Creamos sitios web modernos, responsivos y optimizados para ofrecer la mejor experiencia de usuario y alcanzar tus objetivos.
                     </p>
                     <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service1-full-desc">Leer Más</button>
@@ -75,11 +246,11 @@
                     </p>
                 </div>
 
-                <!-- Service Card 2 -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://placehold.co/300x200/60a5fa/ffffff?text=Marketing+Digital" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
+                <!-- Service Card 2: Marketing Digital Estratégico -->
+                <div class="service-card bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden p-6 flex flex-col items-center text-center">
+                    <img src="https://placehold.co/300x200/06b6d4/ffffff?text=Marketing+Digital" alt="Marketing Digital" class="w-full h-48 object-cover rounded-lg mb-4">
                     <h3 class="text-2xl font-semibold text-slate-800 mb-2">Marketing Digital Estratégico</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         Aumenta tu visibilidad online y atrae a más clientes con nuestras estrategias de SEO, SEM, redes sociales y marketing de contenidos.
                     </p>
                     <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service2-full-desc">Leer Más</button>
@@ -88,11 +259,11 @@
                     </p>
                 </div>
 
-                <!-- Service Card 3 -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://placehold.co/300x200/f87171/ffffff?text=Diseño+Gráfico" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
+                <!-- Service Card 3: Diseño Gráfico Creativo -->
+                <div class="service-card bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden p-6 flex flex-col items-center text-center">
+                    <img src="https://placehold.co/300x200/ef4444/ffffff?text=Diseño+Gráfico" alt="Diseño Gráfico" class="w-full h-48 object-cover rounded-lg mb-4">
                     <h3 class="text-2xl font-semibold text-slate-800 mb-2">Diseño Gráfico Creativo</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         Desde logotipos impactantes hasta materiales de marketing, nuestro equipo de diseño dará vida a tu visión con creatividad y profesionalismo.
                     </p>
                     <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service3-full-desc">Leer Más</button>
@@ -101,11 +272,11 @@
                     </p>
                 </div>
 
-                <!-- Service Card 4 -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://placehold.co/300x200/34d399/ffffff?text=Consultoría+TI" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
+                <!-- Service Card 4: Consultoría y Soporte TI -->
+                <div class="service-card bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden p-6 flex flex-col items-center text-center">
+                    <img src="https://placehold.co/300x200/10b981/ffffff?text=Consultoría+TI" alt="Consultoría TI" class="w-full h-48 object-cover rounded-lg mb-4">
                     <h3 class="text-2xl font-semibold text-slate-800 mb-2">Consultoría y Soporte TI</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         Brindamos asesoramiento experto y soporte técnico para optimizar tu infraestructura tecnológica y resolver cualquier desafío.
                     </p>
                     <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service4-full-desc">Leer Más</button>
@@ -114,11 +285,11 @@
                     </p>
                 </div>
 
-                <!-- Service Card 5 -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://placehold.co/300x200/fbbf24/ffffff?text=Contenido+Digital" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
+                <!-- Service Card 5: Creación de Contenido Digital -->
+                <div class="service-card bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden p-6 flex flex-col items-center text-center">
+                    <img src="https://placehold.co/300x200/f59e0b/ffffff?text=Contenido+Digital" alt="Creación de Contenido Digital" class="w-full h-48 object-cover rounded-lg mb-4">
                     <h3 class="text-2xl font-semibold text-slate-800 mb-2">Creación de Contenido Digital</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         Desarrollamos contenido atractivo y relevante para tu audiencia, desde artículos de blog hasta videos y podcasts.
                     </p>
                     <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service5-full-desc">Leer Más</button>
@@ -127,11 +298,11 @@
                     </p>
                 </div>
 
-                <!-- Service Card 6 -->
-                <div class="service-card bg-white rounded-xl shadow-md overflow-hidden p-6 flex flex-col items-center text-center">
-                    <img src="https://placehold.co/300x200/ec4899/ffffff?text=E-commerce" alt="" class="w-full h-48 object-cover rounded-lg mb-4">
+                <!-- Service Card 6: Soluciones de E-commerce -->
+                <div class="service-card bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden p-6 flex flex-col items-center text-center">
+                    <img src="https://placehold.co/300x200/ec4899/ffffff?text=E-commerce" alt="Soluciones de E-commerce" class="w-full h-48 object-cover rounded-lg mb-4">
                     <h3 class="text-2xl font-semibold text-slate-800 mb-2">Soluciones de E-commerce</h3>
-                    <p class="text-slate-600 mb-4 flex-grow">
+                    <p class="text-slate-700 mb-4 flex-grow">
                         Diseñamos y desarrollamos tiendas online robustas y seguras, optimizadas para maximizar tus ventas y la experiencia del cliente.
                     </p>
                     <button class="bg-indigo-600 text-white py-2 px-5 rounded-full hover:bg-indigo-700 transition duration-300 font-medium text-sm read-more-btn" data-target="service6-full-desc">Leer Más</button>
@@ -144,12 +315,12 @@
     </section>
 
     <!-- About Us Section -->
-    <section id="nosotros" class="bg-slate-100 py-16 px-4 rounded-lg shadow-md">
+    <section id="nosotros" class="bg-indigo-50 py-16 px-4 rounded-lg shadow-xl animate-on-scroll">
         <div class="container mx-auto text-center">
-            <h2 class="text-4xl font-bold text-slate-800 mb-8">Sobre Nosotros</h2>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-indigo-800 mb-8">Sobre Nosotros</h2>
             <div class="max-w-3xl mx-auto text-slate-700 text-lg leading-relaxed">
                 <p class="mb-4">
-                    En <span class="font-semibold text-indigo-600">[Tu Empresa]</span>, somos un equipo apasionado de profesionales dedicados a ofrecer soluciones digitales de alta calidad. Con años de experiencia en la industria, nos enorgullece construir relaciones duraderas con nuestros clientes, basadas en la confianza, la transparencia y los resultados.
+                    En <span class="font-semibold text-indigo-700">[Tu Empresa]</span>, somos un equipo apasionado de profesionales dedicados a ofrecer soluciones digitales de alta calidad. Con años de experiencia en la industria, nos enorgullece construir relaciones duraderas con nuestros clientes, basadas en la confianza, la transparencia y los resultados.
                 </p>
                 <p>
                     Nuestra misión es empoderar a empresas de todos los tamaños para que alcancen su máximo potencial en el mundo digital. Creemos en la innovación constante y en la adaptación a las nuevas tendencias para asegurar que nuestros clientes siempre estén un paso adelante.
@@ -159,24 +330,24 @@
     </section>
 
     <!-- Contact Section -->
-    <section id="contacto" class="py-16 px-4">
+    <section id="contacto" class="py-16 px-4 bg-gray-50 animate-on-scroll">
         <div class="container mx-auto">
-            <h2 class="text-4xl font-bold text-center text-slate-800 mb-12">Contáctanos</h2>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-center text-indigo-800 mb-12">Contáctanos</h2>
 
-            <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-md">
-                <p class="text-slate-600 text-center mb-6">¿Tienes un proyecto en mente o alguna pregunta? ¡Nos encantaría escucharte!</p>
+            <div class="max-w-xl mx-auto bg-white p-8 rounded-xl shadow-2xl border-2 border-indigo-200 contact-form-container">
+                <p class="text-slate-700 text-center mb-6 text-lg">¿Tienes un proyecto en mente o alguna pregunta? ¡Nos encantaría escucharte!</p>
                 <form id="contactForm" class="space-y-6">
                     <div>
-                        <label for="name" class="block text-slate-700 text-sm font-bold mb-2">Nombre Completo</label>
-                        <input type="text" id="name" name="name" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Tu Nombre" required>
+                        <label for="name" class="block text-slate-700 text-base font-semibold mb-2">Nombre Completo</label>
+                        <input type="text" id="name" name="name" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200" placeholder="Tu Nombre" required>
                     </div>
                     <div>
-                        <label for="email" class="block text-slate-700 text-sm font-bold mb-2">Correo Electrónico</label>
-                        <input type="email" id="email" name="email" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="tu.email@ejemplo.com" required>
+                        <label for="email" class="block text-slate-700 text-base font-semibold mb-2">Correo Electrónico</label>
+                        <input type="email" id="email" name="email" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200" placeholder="tu.email@ejemplo.com" required>
                     </div>
                     <div>
-                        <label for="message" class="block text-slate-700 text-sm font-bold mb-2">Tu Mensaje</label>
-                        <textarea id="message" name="message" rows="6" class="shadow appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent" placeholder="Describe tu proyecto o pregunta aquí..." required></textarea>
+                        <label for="message" class="block text-slate-700 text-base font-semibold mb-2">Tu Mensaje</label>
+                        <textarea id="message" name="message" rows="6" class="shadow-sm appearance-none border rounded-lg w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition duration-200" placeholder="Describe tu proyecto o pregunta aquí..." required></textarea>
                     </div>
                     <div class="text-center">
                         <button type="submit" class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-full hover:bg-indigo-700 transition duration-300 transform hover:scale-105 shadow-lg">
@@ -190,7 +361,7 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-800 text-white py-8 px-4 rounded-t-lg shadow-inner">
+    <footer class="bg-indigo-900 text-white py-8 px-4 rounded-t-lg shadow-inner">
         <div class="container mx-auto text-center text-sm">
             <p>&copy; 2025 [Tu Empresa]. Todos los derechos reservados.</p>
             <p class="mt-2">
@@ -231,8 +402,8 @@
                 console.log('Mensaje:', message);
 
                 formMessage.classList.remove('hidden');
-                formMessage.classList.remove('bg-red-100', 'text-red-700');
-                formMessage.classList.add('bg-green-100', 'text-green-700');
+                formMessage.classList.remove('bg-red-100', 'text-red-700'); /* Remove old classes */
+                formMessage.classList.add('bg-emerald-100', 'text-emerald-700'); /* Use emerald for success */
                 formMessage.innerHTML = '¡Gracias por tu mensaje! Nos pondremos en contacto contigo pronto.';
 
                 contactForm.reset(); // Clear the form
@@ -257,6 +428,45 @@
                         this.textContent = 'Leer Más';
                     }
                 });
+            });
+
+            // Drawer Menu Logic
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mobileDrawer = document.getElementById('mobileDrawer');
+            const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+
+            hamburgerBtn.addEventListener('click', () => {
+                mobileDrawer.classList.add('open');
+            });
+
+            drawerCloseBtn.addEventListener('click', () => {
+                mobileDrawer.classList.remove('open');
+            });
+
+            // Close drawer when a link inside it is clicked
+            mobileDrawer.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileDrawer.classList.remove('open');
+                });
+            });
+
+            // Animation on Scroll for sections (re-added for this document)
+            const animateSections = document.querySelectorAll('.animate-on-scroll');
+            const sectionObserverOptions = {
+                root: null, // viewport
+                rootMargin: '0px',
+                threshold: 0.1 // 10% of the section must be visible
+            };
+            const sectionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); // Stop observing once animated
+                    }
+                });
+            }, sectionObserverOptions);
+            animateSections.forEach(section => {
+                sectionObserver.observe(section);
             });
         });
     </script>
