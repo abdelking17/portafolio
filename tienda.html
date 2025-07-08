@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Tienda Online - Demo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Prevent horizontal scroll due to transforms */
+        }
+        /* Custom styles for product image 3D effect in modal */
+        .product-image-3d-effect {
+            transform: rotateX(6deg) rotateY(3deg) scale(1.05);
+            transition: all 0.5s ease-out;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+        }
+        .product-image-3d-effect:hover {
+            transform: rotateX(0deg) rotateY(0deg) scale(1);
+        }
+        /* Ensure Lucide icons are rendered */
+        .lucide {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="bg-white shadow-md py-4 px-4 md:px-8 flex items-center justify-between sticky top-0 z-50 rounded-b-lg">
+        <!-- Menu Icon for Mobile -->
+        <button id="menu-button" class="md:hidden p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="Abrir menú">
+            <i data-lucide="menu" class="w-6 h-6 text-gray-700"></i>
+        </button>
+
+        <!-- Logo -->
+        <div class="flex-shrink-0">
+            <a href="#" class="text-2xl font-bold text-orange-600 font-inter">
+                MiTienda
+            </a>
+        </div>
+
+        <!-- Search Bar -->
+        <form id="search-form" class="flex-grow max-w-xl mx-4 hidden md:flex">
+            <input
+                type="text"
+                id="search-input"
+                placeholder="Buscar productos..."
+                class="flex-grow px-4 py-2 border border-gray-300 rounded-l-full focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-200"
+            />
+            <button
+                type="submit"
+                class="bg-orange-500 text-white px-4 py-2 rounded-r-full hover:bg-orange-600 transition-colors duration-200 flex items-center justify-center"
+                aria-label="Buscar"
+            >
+                <i data-lucide="search" class="w-5 h-5"></i>
+            </button>
+        </form>
+
+        <!-- Navigation (Desktop) -->
+        <nav class="hidden md:flex items-center space-x-6">
+            <a href="#" class="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+                Ofertas
+            </a>
+            <a href="#" class="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+                Mi Cuenta
+            </a>
+            <a href="#" class="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+                Categorías
+            </a>
+            <a href="#" class="text-gray-700 hover:text-orange-600 font-medium transition-colors">
+                Contacto
+            </a>
+            <button id="cart-button-desktop" class="relative p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="Carrito de compras">
+                <i data-lucide="shopping-cart" class="w-6 h-6 text-gray-700"></i>
+                <span class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                    0
+                </span>
+            </button>
+        </nav>
+
+        <!-- Cart Icon for Mobile -->
+        <button id="cart-button-mobile" class="md:hidden relative p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="Carrito de compras">
+            <i data-lucide="shopping-cart" class="w-6 h-6 text-gray-700"></i>
+            <span class="absolute -top-0.5 -right-0.5 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">
+                0
+            </span>
+        </button>
+    </header>
+
+    <!-- Drawer Menu -->
+    <div id="drawer" class="fixed inset-0 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out md:hidden">
+        <!-- Overlay -->
+        <div id="drawer-overlay" class="absolute inset-0 bg-black bg-opacity-50 hidden"></div>
+
+        <!-- Drawer Content -->
+        <div class="relative bg-white w-64 h-full shadow-lg p-4 flex flex-col rounded-r-lg">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">Categorías</h2>
+                <button id="drawer-close-button" class="p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="Cerrar menú">
+                    <i data-lucide="x" class="w-6 h-6 text-gray-700"></i>
+                </button>
+            </div>
+            <nav>
+                <ul id="drawer-categories-list">
+                    <!-- Categories will be dynamically inserted here -->
+                </ul>
+                <ul>
+                    <li class="mb-2">
+                        <a href="#" class="block w-full text-left py-2 px-3 rounded-md text-gray-700 hover:bg-orange-100 hover:text-orange-700 transition-colors">
+                            Ofertas
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="block w-full text-left py-2 px-3 rounded-md text-gray-700 hover:bg-orange-100 hover:text-orange-700 transition-colors">
+                            Mi Cuenta
+                        </a>
+                    </li>
+                    <li class="mb-2">
+                        <a href="#" class="block w-full text-left py-2 px-3 rounded-md text-gray-700 hover:bg-orange-100 hover:text-orange-700 transition-colors">
+                            Contacto
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Image Slider -->
+    <div id="image-slider" class="relative w-full overflow-hidden rounded-lg shadow-lg mb-8">
+        <div class="relative w-full" style="padding-bottom: 33.33%;">
+            <!-- Images will be dynamically inserted here -->
+        </div>
+        <!-- Left Arrow -->
+        <button id="slider-prev-button" class="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-colors z-10" aria-label="Diapositiva anterior">
+            <i data-lucide="chevron-left" class="w-6 h-6"></i>
+        </button>
+        <!-- Right Arrow -->
+        <button id="slider-next-button" class="absolute top-1/2 right-4 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-colors z-10" aria-label="Siguiente diapositiva">
+            <i data-lucide="chevron-right" class="w-6 h-6"></i>
+        </button>
+        <!-- Dots navigation -->
+        <div id="slider-dots" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+            <!-- Dots will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <h1 id="main-title" class="text-3xl font-bold text-gray-800 mb-6 md:mb-8 text-center">
+            Explora Nuestros Productos
+        </h1>
+
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            <!-- Products and Banners will be dynamically inserted here -->
+        </div>
+    </main>
+
+    <!-- Product Detail Modal -->
+    <div id="product-detail-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75 p-4 overflow-auto hidden">
+        <div class="relative bg-white rounded-xl shadow-2xl w-full max-w-4xl h-full max-h-[90vh] overflow-hidden flex flex-col md:flex-row">
+            <!-- Close Button -->
+            <button id="modal-close-button" class="absolute top-4 right-4 z-10 p-2 rounded-full bg-white text-gray-700 hover:bg-gray-100 transition-colors shadow-md" aria-label="Cerrar detalles del producto">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <!-- Left Section - Image with Oval Background -->
+            <div class="relative flex-1 bg-gradient-to-br from-white to-indigo-100 flex items-center justify-center p-8 md:p-12 overflow-hidden">
+                <!-- Oval background effect -->
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-[150%] h-[150%] bg-indigo-200 rounded-full transform scale-150 opacity-70"></div>
+                </div>
+                <!-- Image with 3D effect -->
+                <div class="relative z-10 p-4 bg-white bg-opacity-90 rounded-2xl shadow-2xl product-image-3d-effect">
+                    <img id="modal-product-image" src="" alt="" class="w-full h-auto max-w-xs md:max-w-sm lg:max-w-md rounded-lg">
+                </div>
+            </div>
+
+            <!-- Right Section - Product Details -->
+            <div class="flex-1 p-6 md:p-8 flex flex-col justify-between overflow-y-auto">
+                <div>
+                    <h2 id="modal-product-name" class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 leading-tight"></h2>
+                    <p id="modal-product-category" class="text-lg text-gray-600 mb-4"></p>
+                    <p id="modal-product-price" class="text-2xl md:text-3xl font-bold text-orange-600 mb-6"></p>
+                    <p id="modal-product-description" class="text-gray-700 text-base md:text-lg mb-6 leading-relaxed"></p>
+                    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                        <h4 class="font-semibold text-gray-800 mb-2">Detalles Adicionales:</h4>
+                        <p id="modal-product-details" class="text-gray-600 text-sm md:text-base"></p>
+                    </div>
+                </div>
+
+                <!-- Quantity Selector and Add to Cart -->
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 mt-auto pt-4 border-t border-gray-100">
+                    <div class="flex items-center border border-gray-300 rounded-full px-3 py-1">
+                        <button id="quantity-minus" class="p-1 rounded-full text-gray-600 hover:bg-gray-100 transition-colors" aria-label="Disminuir cantidad">
+                            <i data-lucide="minus" class="w-5 h-5"></i>
+                        </button>
+                        <span id="quantity-display" class="mx-3 text-lg font-semibold text-gray-800">1</span>
+                        <button id="quantity-plus" class="p-1 rounded-full text-gray-600 hover:bg-gray-100 transition-colors" aria-label="Aumentar cantidad">
+                            <i data-lucide="plus" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                    <button class="w-full sm:w-auto bg-orange-500 text-white font-bold py-3 px-6 rounded-full hover:bg-orange-600 transition-colors duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                        Agregar al Carrito
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Product Data
+        const productsData = [
+            {
+                id: 1,
+                name: 'Auriculares Inalámbricos Pro',
+                category: 'Electrónica',
+                price: 129.99,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Auriculares',
+                description: 'Experimenta un sonido inmersivo y una comodidad excepcional con estos auriculares inalámbricos de alta fidelidad. Batería de larga duración y cancelación de ruido activa.',
+                details: 'Conectividad Bluetooth 5.2, hasta 30 horas de batería, carga rápida, micrófono integrado para llamadas claras.'
+            },
+            {
+                id: 2,
+                name: 'Smartwatch Deportivo X1',
+                category: 'Electrónica',
+                price: 89.99,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Smartwatch',
+                description: 'Monitoriza tu actividad física y tu salud con este elegante smartwatch. Incluye GPS, monitor de ritmo cardíaco y notificaciones inteligentes.',
+                details: 'Pantalla AMOLED de 1.5 pulgadas, resistencia al agua 5ATM, más de 100 modos deportivos, compatible con iOS y Android.'
+            },
+            {
+                id: 3,
+                name: 'Cafetera Espresso Automática',
+                category: 'Hogar',
+                price: 249.99,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Cafetera',
+                description: 'Prepara tu café favorito con solo tocar un botón. Esta cafetera automática ofrece una experiencia de barista en casa.',
+                details: 'Molinillo integrado, presión de 15 bares, depósito de agua de 1.8L, sistema de leche automático.'
+            },
+            {
+                id: 4,
+                name: 'Laptop Ultradelgada ZBook',
+                category: 'Computadoras',
+                price: 899.99,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Laptop',
+                description: 'Potencia y portabilidad en un diseño ultradelgado. Perfecta para trabajar o estudiar en cualquier lugar.',
+                details: 'Procesador Intel Core i7, 16GB RAM, 512GB SSD, pantalla Full HD de 14 pulgadas.'
+            },
+            {
+                id: 5,
+                name: 'Set de Cuchillos Profesionales',
+                category: 'Cocina',
+                price: 79.99,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Cuchillos',
+                description: 'Un juego esencial para cualquier chef. Cuchillos afilados y duraderos para todas tus necesidades culinarias.',
+                details: 'Acero inoxidable de alta calidad, mangos ergonómicos, incluye 5 cuchillos y un bloque de madera.'
+            },
+            {
+                id: 6,
+                name: 'Mochila Antirrobo con USB',
+                category: 'Accesorios',
+                price: 45.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Mochila',
+                description: 'Protege tus pertenencias con esta mochila segura y funcional. Puerto de carga USB integrado.',
+                details: 'Material resistente al corte, cremalleras ocultas, compartimento para laptop de 15.6 pulgadas, puerto USB externo.'
+            },
+            {
+                id: 7,
+                name: 'Televisor LED 4K 55"',
+                category: 'Electrónica',
+                price: 599.99,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=TV',
+                description: 'Disfruta de una calidad de imagen impresionante con este televisor 4K. Colores vibrantes y detalles nítidos.',
+                details: 'Resolución 3840x2160, HDR10+, Smart TV con Android TV, 3 puertos HDMI.'
+            },
+            {
+                id: 8,
+                name: 'Robot Aspirador Inteligente',
+                category: 'Hogar',
+                price: 199.99,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Aspirador',
+                description: 'Mantén tu hogar limpio sin esfuerzo. Este robot aspirador mapea tu casa y se carga automáticamente.',
+                details: 'Navegación inteligente, control por app, compatible con asistentes de voz, hasta 120 minutos de autonomía.'
+            },
+            {
+                id: 9,
+                name: 'Cámara de Seguridad HD',
+                category: 'Electrónica',
+                price: 65.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Cámara',
+                description: 'Vigila tu hogar con esta cámara de seguridad de alta definición. Visión nocturna y detección de movimiento.',
+                details: 'Resolución 1080p, ángulo de visión de 130°, audio bidireccional, almacenamiento en la nube/tarjeta SD.'
+            },
+            {
+                id: 10,
+                name: 'Set de Sartenes Antiadherentes',
+                category: 'Cocina',
+                price: 55.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Sartenes',
+                description: 'Cocina de forma saludable y sin que se pegue nada con este set de sartenes de calidad premium.',
+                details: 'Recubrimiento antiadherente de 3 capas, aptas para todo tipo de cocinas, mangos ergonómicos, fácil limpieza.'
+            },
+            {
+                id: 11,
+                name: 'Altavoz Bluetooth Portátil',
+                category: 'Electrónica',
+                price: 49.99,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Altavoz',
+                description: 'Lleva tu música a todas partes con este potente altavoz Bluetooth. Sonido claro y graves profundos.',
+                details: 'Resistencia al agua IPX7, hasta 15 horas de batería, micrófono integrado, emparejamiento estéreo.'
+            },
+            {
+                id: 12,
+                name: 'Manta Eléctrica Calefactable',
+                category: 'Hogar',
+                price: 39.99,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Manta',
+                description: 'Mantente cálido y cómodo en los días fríos con esta suave manta eléctrica con múltiples ajustes de calor.',
+                details: 'Tejido de franela suave, 3 niveles de calor, apagado automático de seguridad, lavable a máquina.'
+            },
+            {
+                id: 13,
+                name: 'Router Wi-Fi de Doble Banda',
+                category: 'Electrónica',
+                price: 75.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Router',
+                description: 'Mejora tu conexión a internet con este router de alta velocidad y doble banda.',
+                details: 'Velocidad AC1200, 4 antenas externas, compatible con IPv6, fácil configuración.'
+            },
+            {
+                id: 14,
+                name: 'Juego de Herramientas Completo',
+                category: 'Hogar',
+                price: 110.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Herramientas',
+                description: 'Todo lo que necesitas para tus proyectos de bricolaje en un solo kit. Calidad profesional.',
+                details: '120 piezas, estuche resistente, incluye taladro inalámbrico, llaves, destornilladores y más.'
+            },
+            {
+                id: 15,
+                name: 'Monitor Curvo Gaming 27"',
+                category: 'Computadoras',
+                price: 299.99,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Monitor',
+                description: 'Sumérgete en tus juegos con este monitor curvo de alta resolución y baja latencia.',
+                details: 'Resolución QHD, 144Hz, 1ms de respuesta, tecnología FreeSync, puertos HDMI y DisplayPort.'
+            },
+            {
+                id: 16,
+                name: 'Batidora de Vaso de Alta Potencia',
+                category: 'Cocina',
+                price: 85.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Batidora',
+                description: 'Prepara batidos, sopas y salsas perfectas con esta batidora de vaso potente y fácil de limpiar.',
+                details: '1200W de potencia, jarra de cristal de 1.5L, cuchillas de acero inoxidable, múltiples velocidades y función pulso.'
+            },
+            {
+                id: 17,
+                name: 'Gafas de Sol Polarizadas',
+                category: 'Accesorios',
+                price: 25.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Gafas',
+                description: 'Protege tus ojos con estilo. Gafas de sol polarizadas para una visión clara y sin reflejos.',
+                details: 'Protección UV400, montura ligera y resistente, diseño unisex, incluye estuche y paño de limpieza.'
+            },
+            {
+                id: 18,
+                name: 'Impresora Multifunción Inalámbrica',
+                category: 'Computadoras',
+                price: 150.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Impresora',
+                description: 'Imprime, escanea y copia con facilidad desde cualquier dispositivo. Ideal para el hogar o la oficina.',
+                details: 'Conectividad Wi-Fi, impresión a doble cara automática, alimentador automático de documentos, compatible con app móvil.'
+            },
+            {
+                id: 19,
+                name: 'Set de Toallas de Algodón Egipcio',
+                category: 'Hogar',
+                price: 40.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Toallas',
+                description: 'Experimenta la suavidad y absorción del algodón egipcio con este lujoso set de toallas.',
+                details: '100% algodón egipcio, 600 GSM, incluye 2 toallas de baño, 2 de mano y 2 de cara, varios colores disponibles.'
+            },
+            {
+                id: 20,
+                name: 'Cargador Rápido USB-C',
+                category: 'Electrónica',
+                price: 18.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Cargador',
+                description: 'Carga tus dispositivos en tiempo récord con este cargador rápido USB-C de alta eficiencia.',
+                details: '20W de potencia, compatible con Power Delivery, diseño compacto, incluye cable USB-C a USB-C.'
+            },
+            {
+                id: 21,
+                name: 'Aspiradora de Mano Inalámbrica',
+                category: 'Hogar',
+                price: 70.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=AspiradoraMano',
+                description: 'Ligera y potente, ideal para limpiar rápidamente derrames y suciedad en cualquier rincón del hogar.',
+                details: 'Batería recargable, filtro lavable, boquillas para diferentes superficies, diseño ergonómico.'
+            },
+            {
+                id: 22,
+                name: 'Teclado Mecánico RGB',
+                category: 'Computadoras',
+                price: 95.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=TecladoRGB',
+                description: 'Teclado gaming con interruptores mecánicos y retroiluminación RGB personalizable para una experiencia de juego inigualable.',
+                details: 'Interruptores Cherry MX, 104 teclas, anti-ghosting, software de personalización, cable USB trenzado.'
+            },
+            {
+                id: 23,
+                name: 'Juego de Ollas y Sartenes de Acero Inoxidable',
+                category: 'Cocina',
+                price: 180.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=OllasSartenes',
+                description: 'Set completo de utensilios de cocina duraderos y elegantes, perfectos para cualquier tipo de cocción.',
+                details: 'Acero inoxidable de grado alimenticio, bases encapsuladas para distribución uniforme del calor, tapas de vidrio templado, aptas para lavavajillas.'
+            },
+            {
+                id: 24,
+                name: 'Batería Externa 20000mAh',
+                category: 'Electrónica',
+                price: 35.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=PowerBank',
+                description: 'Mantén tus dispositivos cargados en todo momento con esta batería externa de alta capacidad.',
+                details: '20000mAh, doble puerto USB, carga rápida, indicador LED de batería, diseño compacto.'
+            },
+            {
+                id: 25,
+                name: 'Set de Maletas de Viaje',
+                category: 'Accesorios',
+                price: 150.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Maletas',
+                description: 'Viaja con estilo y comodidad con este set de maletas rígidas y ligeras.',
+                details: 'Material ABS resistente a impactos, ruedas giratorias 360°, cerradura TSA, asas telescópicas, incluye 3 tamaños.'
+            },
+            {
+                id: 26,
+                name: 'Termostato Inteligente Wi-Fi',
+                category: 'Hogar',
+                price: 120.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Termostato',
+                description: 'Controla la temperatura de tu hogar desde cualquier lugar con este termostato inteligente y eficiente.',
+                details: 'Compatible con asistentes de voz, programación semanal, ahorro de energía, fácil instalación.'
+            },
+            {
+                id: 27,
+                name: 'Ratón Gaming Inalámbrico',
+                category: 'Computadoras',
+                price: 60.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=MouseGaming',
+                description: 'Precisión y velocidad para tus sesiones de juego. Diseñado para gamers exigentes.',
+                details: 'Sensor óptico de 16000 DPI, 7 botones programables, iluminación RGB, batería de larga duración.'
+            },
+            {
+                id: 28,
+                name: 'Freidora de Aire Digital',
+                category: 'Cocina',
+                price: 95.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=FreidoraAire',
+                description: 'Cocina tus platos favoritos de forma más saludable con esta freidora de aire de gran capacidad.',
+                details: 'Capacidad de 5L, 8 programas preestablecidos, pantalla táctil LED, fácil de limpiar.'
+            },
+            {
+                id: 29,
+                name: 'Auriculares con Cancelación de Ruido',
+                category: 'Electrónica',
+                price: 180.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=AuricularesANC',
+                description: 'Sumérgete en tu música sin distracciones con la avanzada tecnología de cancelación activa de ruido.',
+                details: 'Cancelación de ruido híbrida, hasta 40 horas de reproducción, modo ambiente, cómodas almohadillas.'
+            },
+            {
+                id: 30,
+                name: 'Organizador de Escritorio de Bambú',
+                category: 'Accesorios',
+                price: 20.00,
+                image: 'https://placehold.co/400x400/F0F0F0/333333?text=Organizador',
+                description: 'Mantén tu espacio de trabajo ordenado y elegante con este organizador de bambú natural.',
+                details: 'Múltiples compartimentos para bolígrafos, clips, notas, soporte para teléfono, ecológico.'
+            },
+        ];
+
+        const categories = [
+            'Todas las Categorías',
+            'Electrónica',
+            'Hogar',
+            'Computadoras',
+            'Cocina',
+            'Accesorios',
+        ];
+
+        // Global state variables
+        let currentFilteredProducts = productsData;
+        let currentActiveCategory = 'Todas las Categorías';
+        let currentSelectedProduct = null;
+        let currentModalQuantity = 1;
+
+        // --- DOM Elements ---
+        const menuButton = document.getElementById('menu-button');
+        const drawer = document.getElementById('drawer');
+        const drawerOverlay = document.getElementById('drawer-overlay');
+        const drawerCloseButton = document.getElementById('drawer-close-button');
+        const drawerCategoriesList = document.getElementById('drawer-categories-list');
+
+        const searchForm = document.getElementById('search-form');
+        const searchInput = document.getElementById('search-input');
+        const mainTitle = document.getElementById('main-title');
+        const productsGrid = document.getElementById('products-grid');
+
+        const imageSliderContainer = document.getElementById('image-slider');
+        const sliderPrevButton = document.getElementById('slider-prev-button');
+        const sliderNextButton = document.getElementById('slider-next-button');
+        const sliderDotsContainer = document.getElementById('slider-dots');
+        let currentSliderIndex = 0;
+        let sliderInterval;
+
+        const productDetailModal = document.getElementById('product-detail-modal');
+        const modalCloseButton = document.getElementById('modal-close-button');
+        const modalProductImage = document.getElementById('modal-product-image');
+        const modalProductName = document.getElementById('modal-product-name');
+        const modalProductCategory = document.getElementById('modal-product-category');
+        const modalProductPrice = document.getElementById('modal-product-price');
+        const modalProductDescription = document.getElementById('modal-product-description');
+        const modalProductDetails = document.getElementById('modal-product-details');
+        const quantityMinusButton = document.getElementById('quantity-minus');
+        const quantityPlusButton = document.getElementById('quantity-plus');
+        const quantityDisplay = document.getElementById('quantity-display');
+
+        // --- Helper Functions ---
+
+        // Function to render Lucide icons after they are loaded
+        function renderLucideIcons() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        // --- Drawer Functions ---
+        function toggleDrawer() {
+            drawer.classList.toggle('-translate-x-full');
+            drawerOverlay.classList.toggle('hidden');
+        }
+
+        function closeDrawer() {
+            drawer.classList.add('-translate-x-full');
+            drawerOverlay.classList.add('hidden');
+        }
+
+        // --- Product Rendering Functions ---
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 cursor-pointer overflow-hidden transform hover:-translate-y-1';
+            card.innerHTML = `
+                <div class="relative w-full h-48 bg-gray-100 flex items-center justify-center overflow-hidden">
+                    <img src="${product.image}" alt="${product.name}" class="object-contain w-full h-full p-4 transition-transform duration-300 hover:scale-105">
+                </div>
+                <div class="p-4">
+                    <h3 class="text-lg font-semibold text-gray-800 truncate mb-1">${product.name}</h3>
+                    <p class="text-sm text-gray-500 mb-2">${product.category}</p>
+                    <p class="text-xl font-bold text-orange-600">$${product.price.toFixed(2)}</p>
+                </div>
+            `;
+            card.querySelector('img').onerror = function() {
+                this.onerror = null;
+                this.src = `https://placehold.co/400x400/F0F0F0/333333?text=No+Imagen`;
+            };
+            card.addEventListener('click', () => showProductModal(product));
+            return card;
+        }
+
+        function createBanner(imageUrl, altText, linkUrl, bannerIndex) {
+            const bannerDiv = document.createElement('div');
+            bannerDiv.className = 'col-span-full my-8'; // Ensure it spans all columns
+            bannerDiv.innerHTML = `
+                <a href="${linkUrl}" target="_blank" rel="noopener noreferrer">
+                    <img
+                        src="${imageUrl}"
+                        alt="${altText}"
+                        class="w-full h-auto rounded-lg shadow-md object-cover"
+                        style="max-height: 200px;"
+                    >
+                </a>
+            `;
+            bannerDiv.querySelector('img').onerror = function() {
+                this.onerror = null;
+                this.src = `https://placehold.co/1200x200/FF6347/FFFFFF?text=Oferta+Especial+${bannerIndex}`;
+            };
+            return bannerDiv;
+        }
+
+        function renderProducts() {
+            productsGrid.innerHTML = ''; // Clear existing products
+            const productsPerRow = 5; // For lg:grid-cols-5
+            const rowsPerBanner = 2;
+            const productsPerBannerChunk = productsPerRow * rowsPerBanner; // 10 products per chunk
+
+            currentFilteredProducts.forEach((product, index) => {
+                productsGrid.appendChild(createProductCard(product));
+
+                // Add a banner after every 'productsPerBannerChunk' products,
+                // but only if there are more products to follow
+                if ((index + 1) % productsPerBannerChunk === 0 && index + 1 < currentFilteredProducts.length) {
+                    const bannerNumber = ((index + 1) / productsPerBannerChunk);
+                    productsGrid.appendChild(
+                        createBanner(
+                            `https://placehold.co/1200x200/4CAF50/FFFFFF?text=Oferta+Exclusiva+${bannerNumber}`,
+                            `Banner de Oferta ${bannerNumber}`,
+                            `#`, // Placeholder link
+                            bannerNumber
+                        )
+                    );
+                }
+            });
+
+            // If no products found
+            if (currentFilteredProducts.length === 0) {
+                productsGrid.innerHTML = `
+                    <p class="col-span-full text-center text-gray-600 text-lg">
+                        No se encontraron productos en esta categoría o con este término de búsqueda.
+                    </p>
+                `;
+            }
+            renderLucideIcons(); // Re-render icons after adding new elements
+        }
+
+        // --- Search and Category Filtering ---
+        function handleSearch(searchTerm) {
+            const lowerCaseSearchTerm = searchTerm.toLowerCase();
+            currentFilteredProducts = productsData.filter(
+                (product) =>
+                    product.name.toLowerCase().includes(lowerCaseSearchTerm) ||
+                    product.description.toLowerCase().includes(lowerCaseSearchTerm) ||
+                    product.category.toLowerCase().includes(lowerCaseSearchTerm)
+            );
+            currentActiveCategory = 'Resultados de Búsqueda';
+            mainTitle.textContent = currentActiveCategory;
+            renderProducts();
+        }
+
+        function handleSelectCategory(category) {
+            currentActiveCategory = category;
+            mainTitle.textContent = category === 'Todas las Categorías' ? 'Explora Nuestros Productos' : category;
+            if (category === 'Todas las Categorías') {
+                currentFilteredProducts = productsData;
+            } else {
+                currentFilteredProducts = productsData.filter((product) => product.category === category);
+            }
+            renderProducts();
+            closeDrawer(); // Close drawer after selection
+        }
+
+        // --- Product Detail Modal Functions ---
+        function showProductModal(product) {
+            currentSelectedProduct = product;
+            currentModalQuantity = 1; // Reset quantity
+            modalProductImage.src = product.image;
+            modalProductImage.alt = product.name;
+            modalProductName.textContent = product.name;
+            modalProductCategory.textContent = product.category;
+            modalProductPrice.textContent = `$${product.price.toFixed(2)}`;
+            modalProductDescription.textContent = product.description;
+            modalProductDetails.textContent = product.details;
+            quantityDisplay.textContent = currentModalQuantity;
+            productDetailModal.classList.remove('hidden');
+            renderLucideIcons(); // Re-render icons in modal
+        }
+
+        function hideProductModal() {
+            productDetailModal.classList.add('hidden');
+            currentSelectedProduct = null;
+        }
+
+        function updateQuantity(amount) {
+            currentModalQuantity = Math.max(1, currentModalQuantity + amount);
+            quantityDisplay.textContent = currentModalQuantity;
+        }
+
+        // --- Image Slider Functions ---
+        const sliderImages = [
+            'https://placehold.co/1200x400/FFD700/000000?text=Grandes+Ofertas+Aquí',
+            'https://placehold.co/1200x400/ADD8E6/000000?text=Nuevos+Lanzamientos',
+            'https://placehold.co/1200x400/90EE90/000000?text=Envío+Gratis+en+Pedidos+Grandes',
+        ];
+
+        function renderSlider() {
+            const imageWrapper = imageSliderContainer.querySelector('div');
+            imageWrapper.innerHTML = ''; // Clear existing images
+            sliderDotsContainer.innerHTML = ''; // Clear existing dots
+
+            sliderImages.forEach((imageSrc, index) => {
+                const img = document.createElement('img');
+                img.src = imageSrc;
+                img.alt = `Slide ${index + 1}`;
+                img.className = `absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out ${
+                    index === currentSliderIndex ? 'opacity-100' : 'opacity-0'
+                }`;
+                img.onerror = function() {
+                    this.onerror = null;
+                    this.src = `https://placehold.co/1200x400/F0F0F0/333333?text=No+Imagen`;
+                };
+                imageWrapper.appendChild(img);
+
+                const dot = document.createElement('button');
+                dot.className = `w-3 h-3 rounded-full ${
+                    index === currentSliderIndex ? 'bg-white' : 'bg-gray-400'
+                } hover:bg-white transition-colors`;
+                dot.setAttribute('aria-label', `Ir a la diapositiva ${index + 1}`);
+                dot.addEventListener('click', () => {
+                    currentSliderIndex = index;
+                    renderSlider();
+                    resetSliderInterval();
+                });
+                sliderDotsContainer.appendChild(dot);
+            });
+        }
+
+        function goToPreviousSlide() {
+            currentSliderIndex = (currentSliderIndex === 0) ? sliderImages.length - 1 : currentSliderIndex - 1;
+            renderSlider();
+            resetSliderInterval();
+        }
+
+        function goToNextSlide() {
+            currentSliderIndex = (currentSliderIndex === sliderImages.length - 1) ? 0 : currentSliderIndex + 1;
+            renderSlider();
+            resetSliderInterval();
+        }
+
+        function startSliderInterval() {
+            sliderInterval = setInterval(goToNextSlide, 5000);
+        }
+
+        function resetSliderInterval() {
+            clearInterval(sliderInterval);
+            startSliderInterval();
+        }
+
+        // --- Event Listeners and Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Render Lucide icons initially
+            renderLucideIcons();
+
+            // Header Event Listeners
+            menuButton.addEventListener('click', toggleDrawer);
+            searchForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                handleSearch(searchInput.value);
+            });
+            document.getElementById('cart-button-desktop').addEventListener('click', () => alert('Funcionalidad de carrito próximamente!'));
+            document.getElementById('cart-button-mobile').addEventListener('click', () => alert('Funcionalidad de carrito próximamente!'));
+
+            // Drawer Event Listeners
+            drawerOverlay.addEventListener('click', closeDrawer);
+            drawerCloseButton.addEventListener('click', closeDrawer);
+
+            // Populate drawer categories
+            categories.forEach(category => {
+                const li = document.createElement('li');
+                li.className = 'mb-2';
+                const button = document.createElement('button');
+                button.className = 'block w-full text-left py-2 px-3 rounded-md text-gray-700 hover:bg-orange-100 hover:text-orange-700 transition-colors';
+                button.textContent = category;
+                button.addEventListener('click', () => handleSelectCategory(category));
+                li.appendChild(button);
+                drawerCategoriesList.appendChild(li);
+            });
+
+            // Product Detail Modal Event Listeners
+            modalCloseButton.addEventListener('click', hideProductModal);
+            quantityMinusButton.addEventListener('click', () => updateQuantity(-1));
+            quantityPlusButton.addEventListener('click', () => updateQuantity(1));
+
+            // Slider Event Listeners
+            sliderPrevButton.addEventListener('click', goToPreviousSlide);
+            sliderNextButton.addEventListener('click', goToNextSlide);
+
+            // Initial renders
+            renderProducts();
+            renderSlider();
+            startSliderInterval();
+        });
+    </script>
+</body>
+</html>
